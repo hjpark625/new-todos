@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { set, ref } from 'firebase/database';
+import { db } from '../../firebase';
 
 function TodoInsert({
   setTodos,
@@ -9,15 +11,23 @@ function TodoInsert({
   setTodos: React.Dispatch<React.SetStateAction<never[]>>;
 }) {
   const [todoValue, setTodoValue] = useState('');
+  const [todoId, setTodoId] = useState(1);
 
-  const token = localStorage.getItem('access_token');
+  const token = localStorage.getItem('uid');
 
   const getInputValue = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTodoValue(e.target.value);
   };
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const postDB = ref(db, `/todos/${token}/${todoId}`);
     e.preventDefault();
+    setTodoId(prev => prev + 1);
+    await set(postDB, {
+      id: todoId,
+      text: todoValue,
+      isCompleted: false,
+    });
     setTodoValue('');
   };
 
