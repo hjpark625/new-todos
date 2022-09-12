@@ -6,7 +6,7 @@ import Register from './Register';
 function Main() {
   const [authType, setAuthType] = useState('login');
   const navigate = useNavigate();
-  const token = localStorage.getItem('access_token');
+  const token = localStorage.getItem('uid');
 
   const checkToken = () => {
     token && navigate('/todo');

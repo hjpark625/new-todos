@@ -52,7 +52,8 @@ const AuthForm = ({ type, setAuthType }: AuthFormProps) => {
       await login(userInfo.email, userInfo.password)
         .then(res => {
           get(child(dbRef, `users/${res.user.uid}`));
-          alert(`어서오세요 ${res.user.email}님`);
+          localStorage.setItem('uid', res.user.uid);
+          alert(`어서오세요 ${res.user.displayName}님`);
           navigate('/todo');
         })
         .catch(err => {
