@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { remove, ref } from 'firebase/database';
+import { db } from '../../firebase';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquare, faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { faPen, faSquareCheck } from '@fortawesome/free-solid-svg-icons';
@@ -13,11 +15,16 @@ function TodoListItem({ items, setTodos }: TodoProps) {
 
   const [editTodo, setEditTodo] = useState(text);
 
+  const token = localStorage.getItem('uid');
+
   const getDoneTodo = async () => {
     setIsDone(prev => !prev);
   };
 
-  const deleteTodo = async () => {};
+  const deleteTodo = async () => {
+    const deleteRef = ref(db, `todos/${token}/${id}`);
+    remove(deleteRef);
+  };
 
   const saveEditTodoText = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEditTodo(e.target.value);
