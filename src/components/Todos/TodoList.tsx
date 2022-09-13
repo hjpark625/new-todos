@@ -3,7 +3,7 @@ import TodoListItem from './TodoListItem';
 import palette from '../../styles/palette';
 import { TodosProps } from '../types/Todo.type';
 
-function TodoList({ todos, setTodos }: TodosProps) {
+function TodoList({ todos }: TodosProps) {
   return (
     <TodoListWrapper>
       {todos === null ? (

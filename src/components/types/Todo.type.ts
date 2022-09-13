@@ -5,7 +5,6 @@ export interface ITodos {
 }
 export interface TodosProps {
   todos: ITodos[] | null;
-  setTodos: React.Dispatch<React.SetStateAction<ITodos[] | null>>;
 }
 
 export interface TodoProps {

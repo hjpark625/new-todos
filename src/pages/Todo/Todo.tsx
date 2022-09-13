@@ -35,7 +35,7 @@ function Todo() {
   return (
     <TodoTemplate>
       <TodoInsert setTodoId={setTodoId} todoId={todoId} />
-      <TodoList todos={todos} setTodos={setTodos} />
+      <TodoList todos={todos} />
     </TodoTemplate>
   );
 }
