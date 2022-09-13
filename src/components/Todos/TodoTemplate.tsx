@@ -1,4 +1,7 @@
 import React from 'react';
+import { logout } from '../../firebase';
+import { getAuth } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import palette from '../../styles/palette';
 
@@ -7,9 +10,21 @@ interface ChildrenProps {
 }
 
 function TodoTemplate({ children }: ChildrenProps) {
-  const onLogout = () => {
-    localStorage.removeItem('access_token');
-    window.location.reload();
+  const navigate = useNavigate();
+  const onLogout = async () => {
+    const auth = getAuth();
+    // localStorage.removeItem('access_token');
+    // window.location.reload();
+    await logout(auth)
+      .then(() => {
+        localStorage.removeItem('uid');
+        alert('로그아웃 완료되었습니다.');
+        navigate('/');
+      })
+      .catch(err => {
+        console.error(err);
+        alert('다시 시도해 주십시오');
+      });
   };
 
   return (

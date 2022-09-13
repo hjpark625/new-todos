@@ -14,22 +14,22 @@ function Todo() {
     !token && navigate('/');
   };
 
-  useEffect(() => {
-    // axios
-    //   .get(API.CREATE_GET_TODO, {
-    //     headers: { Authorization: `Bearer ${token}` },
-    //   })
-    //   .then(res => {
-    //     setTodos(res.data);
-    //   })
-    //   .catch(err => console.error(err));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   // axios
+  //   //   .get(API.CREATE_GET_TODO, {
+  //   //     headers: { Authorization: `Bearer ${token}` },
+  //   //   })
+  //   //   .then(res => {
+  //   //     setTodos(res.data);
+  //   //   })
+  //   //   .catch(err => console.error(err));
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
-  useEffect(() => {
-    checkToken();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   checkToken();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   return (
     <TodoTemplate>
