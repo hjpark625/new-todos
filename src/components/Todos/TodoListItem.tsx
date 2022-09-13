@@ -7,13 +7,11 @@ import palette from '../../styles/palette';
 import { TodoProps, StyleProps } from '../types/Todo.type';
 
 function TodoListItem({ items, setTodos }: TodoProps) {
-  const { todo, isCompleted, id } = items;
+  const { text, isCompleted, id } = items;
   const [isDone, setIsDone] = useState(isCompleted);
   const [isEdit, setIsEdit] = useState(false);
 
-  const [editTodo, setEditTodo] = useState(todo);
-
-  const token = localStorage.getItem('access_token');
+  const [editTodo, setEditTodo] = useState(text);
 
   const getDoneTodo = async () => {
     setIsDone(prev => !prev);
@@ -42,7 +40,7 @@ function TodoListItem({ items, setTodos }: TodoProps) {
         ) : (
           <FontAwesomeIcon icon={faSquare} />
         )}
-        {isEdit || <Text isCompleted={isCompleted}>{todo}</Text>}
+        {isEdit || <Text isCompleted={isCompleted}>{text}</Text>}
       </CheckBox>
       {isEdit && (
         <EditForm

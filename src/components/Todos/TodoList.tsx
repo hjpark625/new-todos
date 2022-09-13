@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import TodoListItem from './TodoListItem';
 import palette from '../../styles/palette';
@@ -7,12 +6,13 @@ import { TodosProps } from '../types/Todo.type';
 function TodoList({ todos, setTodos }: TodosProps) {
   return (
     <TodoListWrapper>
-      {todos.length === 0 && (
+      {todos === null ? (
         <EmptyTodos>해야 할 일 들을 채워주세요!</EmptyTodos>
+      ) : (
+        todos.map(todo => (
+          <TodoListItem items={todo} key={todo.id} setTodos={setTodos} />
+        ))
       )}
-      {todos.map(todo => (
-        <TodoListItem items={todo} key={todo.id} setTodos={setTodos} />
-      ))}
     </TodoListWrapper>
   );
 }

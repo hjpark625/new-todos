@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -6,12 +6,13 @@ import { set, ref } from 'firebase/database';
 import { db } from '../../firebase';
 
 function TodoInsert({
-  setTodos,
+  setTodoId,
+  todoId,
 }: {
-  setTodos: React.Dispatch<React.SetStateAction<never[]>>;
+  setTodoId: React.Dispatch<React.SetStateAction<number>>;
+  todoId: number;
 }) {
   const [todoValue, setTodoValue] = useState('');
-  const [todoId, setTodoId] = useState(1);
 
   const token = localStorage.getItem('uid');
 

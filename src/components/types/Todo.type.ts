@@ -1,17 +1,16 @@
 export interface ITodos {
   id: number;
-  todo: string;
+  text: string;
   isCompleted: boolean;
-  userId: number;
 }
 export interface TodosProps {
-  todos: ITodos[];
-  setTodos: React.Dispatch<React.SetStateAction<never[]>>;
+  todos: ITodos[] | null;
+  setTodos: React.Dispatch<React.SetStateAction<ITodos[] | null>>;
 }
 
 export interface TodoProps {
   items: ITodos;
-  setTodos: React.Dispatch<React.SetStateAction<never[]>>;
+  setTodos: React.Dispatch<React.SetStateAction<ITodos[] | null>>;
 }
 
 export interface StyleProps {
