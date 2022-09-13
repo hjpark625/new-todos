@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { remove, ref } from 'firebase/database';
+import { remove, ref, update } from 'firebase/database';
 import { db } from '../../firebase';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquare, faTrashCan } from '@fortawesome/free-regular-svg-icons';
@@ -8,7 +8,7 @@ import { faPen, faSquareCheck } from '@fortawesome/free-solid-svg-icons';
 import palette from '../../styles/palette';
 import { TodoProps, StyleProps } from '../types/Todo.type';
 
-function TodoListItem({ items, setTodos }: TodoProps) {
+function TodoListItem({ items }: TodoProps) {
   const { text, isCompleted, id } = items;
   const [isDone, setIsDone] = useState(isCompleted);
   const [isEdit, setIsEdit] = useState(false);
@@ -18,7 +18,14 @@ function TodoListItem({ items, setTodos }: TodoProps) {
   const token = localStorage.getItem('uid');
 
   const getDoneTodo = async () => {
-    setIsDone(prev => !prev);
+    const doneRef = ref(db, `todos/${token}/${id}`);
+    setIsDone(!isDone);
+    await update(doneRef, {
+      isCompleted: isDone,
+    }).catch(err => {
+      alert('오류가 발생했습니다.');
+      console.error(err);
+    });
   };
 
   const deleteTodo = async () => {
@@ -32,6 +39,14 @@ function TodoListItem({ items, setTodos }: TodoProps) {
 
   const editSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const editRef = ref(db, `todos/${token}/${id}`);
+    await update(editRef, {
+      text: editTodo,
+    }).catch(err => {
+      alert('수정 실패');
+      console.error(err);
+    });
+    setIsEdit(false);
   };
 
   return (

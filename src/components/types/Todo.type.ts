@@ -10,7 +10,6 @@ export interface TodosProps {
 
 export interface TodoProps {
   items: ITodos;
-  setTodos: React.Dispatch<React.SetStateAction<ITodos[] | null>>;
 }
 
 export interface StyleProps {

@@ -9,9 +9,7 @@ function TodoList({ todos, setTodos }: TodosProps) {
       {todos === null ? (
         <EmptyTodos>해야 할 일 들을 채워주세요!</EmptyTodos>
       ) : (
-        todos.map(todo => (
-          <TodoListItem items={todo} key={todo.id} setTodos={setTodos} />
-        ))
+        todos.map(todo => <TodoListItem items={todo} key={todo.id} />)
       )}
     </TodoListWrapper>
   );
