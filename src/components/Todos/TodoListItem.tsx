@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
 import { remove, ref, update } from 'firebase/database';
 import { db } from '../../firebase';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquare, faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { faPen, faSquareCheck } from '@fortawesome/free-solid-svg-icons';
-import palette from '../../styles/palette';
-import { TodoProps, StyleProps } from '../types/Todo.type';
+import { TodoProps } from '../types/Todo.type';
+import * as S from './styles/TodoListItem.styled';
 
 function TodoListItem({ items }: TodoProps) {
   const { text, isCompleted, id } = items;
@@ -50,8 +49,8 @@ function TodoListItem({ items }: TodoProps) {
   };
 
   return (
-    <TodoListItemWrapper>
-      <CheckBox
+    <S.TodoListItemWrapper>
+      <S.CheckBox
         isCompleted={isCompleted}
         onClick={() => {
           getDoneTodo();
@@ -62,117 +61,40 @@ function TodoListItem({ items }: TodoProps) {
         ) : (
           <FontAwesomeIcon icon={faSquare} />
         )}
-        {isEdit || <Text isCompleted={isCompleted}>{text}</Text>}
-      </CheckBox>
+        {isEdit || <S.Text isCompleted={isCompleted}>{text}</S.Text>}
+      </S.CheckBox>
       {isEdit && (
-        <EditForm
+        <S.EditForm
           onSubmit={e => {
             editSubmit(e);
           }}
         >
-          <EditInput
+          <S.EditInput
             type="text"
             value={editTodo}
             onChange={e => {
               saveEditTodoText(e);
             }}
           />
-        </EditForm>
+        </S.EditForm>
       )}
-      <Edit
+      <S.Edit
         isCompleted={isCompleted}
         onClick={() => {
           setIsEdit(prev => !prev);
         }}
       >
         <FontAwesomeIcon icon={faPen} />
-      </Edit>
-      <Remove
+      </S.Edit>
+      <S.Remove
         onClick={() => {
           deleteTodo();
         }}
       >
         <FontAwesomeIcon icon={faTrashCan} />
-      </Remove>
-    </TodoListItemWrapper>
+      </S.Remove>
+    </S.TodoListItemWrapper>
   );
 }
 
 export default TodoListItem;
-
-const TodoListItemWrapper = styled.div`
-  padding: 1rem;
-  display: flex;
-  align-items: center;
-  position: relative;
-  &:nth-child(even) {
-    background: #f8f9fa;
-  }
-
-  & + & {
-    border-top: 1px solid ${palette.gray[3]};
-  }
-`;
-
-const CheckBox = styled.div<StyleProps>`
-  cursor: pointer;
-  flex: 1;
-  display: flex;
-  align-items: center;
-  svg {
-    font-size: 1.5rem;
-    color: ${({ isCompleted }) => (!isCompleted ? 'inherit' : '#22b8cf')};
-  }
-`;
-
-const Text = styled.div<StyleProps>`
-  margin-left: 0.5rem;
-  flex: 1;
-
-  color: ${({ isCompleted }) => (!isCompleted ? 'inherit' : '#adb5bd')};
-  text-decoration: ${({ isCompleted }) =>
-    !isCompleted ? 'none' : 'line-through'};
-`;
-
-const Remove = styled.div`
-  display: flex;
-  align-items: center;
-  font-size: 1.5rem;
-  color: #ff6b6b;
-  cursor: pointer;
-  &:hover {
-    color: #ff8787;
-  }
-`;
-
-const Edit = styled.div<StyleProps>`
-  display: ${({ isCompleted }) => (isCompleted ? 'none' : 'flex')};
-  margin-right: 1.5rem;
-  align-items: center;
-  font-size: 1.2rem;
-  color: ${palette.gray[6]};
-  cursor: pointer;
-  &:hover {
-    color: ${palette.gray[4]};
-  }
-`;
-
-const EditForm = styled.form`
-  position: absolute;
-  left: 9%;
-`;
-
-const EditInput = styled.input`
-  width: 24rem;
-  height: 2rem;
-  background-color: transparent;
-  border: none;
-  border-bottom: 2px solid ${palette.gray[5]};
-  padding: 0.5rem;
-  padding-left: 0;
-  font-size: 1rem;
-  color: ${palette.gray[6]};
-  &:focus {
-    outline: none;
-  }
-`;
