@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TextMap, UserInfo } from '../types/Auth.type';
+import { useDispatch, useSelector } from 'react-redux';
+import { TextMap } from '../types/Auth.type';
 import { AuthFormProps } from '../types/Auth.type';
+import { changeField, RootState } from '../../modules/auth';
 import { register, db, login } from '../../firebase';
 import { child, ref, set, get } from 'firebase/database';
 import * as S from './styles/AuthForm.styled';
@@ -11,27 +13,37 @@ const textMap: TextMap = {
   register: '회원가입',
 };
 
+interface StateProps {
+  auth: RootState;
+}
+
 const AuthForm = ({ type, setAuthType }: AuthFormProps) => {
-  const [userInfo, setUserInfo] = useState<UserInfo>({
-    email: '',
-    password: '',
-  });
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [error, setError] = useState<string | null>(null);
 
-  const navigate = useNavigate();
+  const userInfo = useSelector((state: StateProps) => state.auth);
 
   const text = textMap[type];
 
   const handleChangeUserInfo = (e: React.ChangeEvent<HTMLInputElement>) => {
     let { name, value } = e.target;
-    setUserInfo({ ...userInfo, [name]: value });
+    dispatch(
+      changeField({
+        form: type,
+        key: name,
+        value,
+      })
+    );
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (type === 'register') {
-      await register(userInfo.email, userInfo.password)
+      await register(userInfo.register.email, userInfo.register.password)
         .then(res => {
+          console.info(res);
           set(ref(db, `users/${res.user.uid}`), {
             id: res.user.uid,
             email: res.user.email,
@@ -40,44 +52,48 @@ const AuthForm = ({ type, setAuthType }: AuthFormProps) => {
           navigate('/todo');
         })
         .catch(err => {
-          if (err.code === 'auth/email-already-in-use') {
-            alert('이미 사용중인 이메일입니다.');
-          } else {
-            alert('회원가입 실패');
+          switch (err.code) {
+            case 'auth/email-already-in-use':
+              return alert('이미 사용중인 이메일입니다.');
+            default:
+              return alert('회원가입 실패');
           }
         });
     } else if (type === 'login') {
       const dbRef = ref(db);
-      await login(userInfo.email, userInfo.password)
+      await login(userInfo.login.email, userInfo.login.password)
         .then(res => {
           get(child(dbRef, `users/${res.user.uid}`));
           localStorage.setItem('uid', res.user.uid);
-          alert(`어서오세요 ${res.user.displayName}님`);
+          alert(`어서오세요 ${res.user.email}님`);
           navigate('/todo');
         })
         .catch(err => {
-          if (err.code === 'auth/user-not-found') {
-            alert('회원 정보가 존재하지 않습니다.');
-          } else if (err.code === 'auth/wrong-password') {
-            alert('비밀번호가 틀렸습니다.');
-          } else if (err.code === 'auth/invalid-email') {
-            alert('유효하지 않은 이메일입니다.');
+          switch (err.code) {
+            case 'auth/user-not-found':
+              return alert('회원 정보가 존재하지 않습니다.');
+            case 'auth/wrong-password':
+              return alert('비밀번호가 틀렸습니다.');
+            case 'auth/invalid-email':
+              return alert('유효하지 않은 이메일입니다.');
+            default:
+              return alert('로그인 실패');
           }
         });
     }
   };
 
   useEffect(() => {
-    if (!userInfo.email && !userInfo.password) {
+    if (!userInfo[type].email && !userInfo[type].password) {
       setError('정보를 입력해주세요');
-    } else if (!userInfo.email.includes('@' && '.com')) {
+    } else if (!userInfo[type].email.includes('@' && '.com')) {
       setError('이메일 형식이 아닙니다.');
-    } else if (userInfo.password.length < 8) {
+    } else if (userInfo[type].password.length < 8) {
       setError('비밀번호는 8자 이상입력해주세요');
     } else {
       setError(null);
     }
-  }, [error, userInfo.email, userInfo.password]);
+  }, [error, type, userInfo]);
 
   return (
     <S.AuthFormWrapper>
@@ -91,6 +107,7 @@ const AuthForm = ({ type, setAuthType }: AuthFormProps) => {
           autoComplete="email"
           name="email"
           placeholder="이메일을 입력해주세요"
+          value={userInfo[type].email}
           onChange={handleChangeUserInfo}
         />
         <S.StyledInput
@@ -98,6 +115,7 @@ const AuthForm = ({ type, setAuthType }: AuthFormProps) => {
           name="password"
           placeholder="비밀번호를 입력해주세요"
           type="password"
+          value={userInfo[type].password}
           onChange={handleChangeUserInfo}
         />
         {error && <S.ErrorMessage>{error}</S.ErrorMessage>}
@@ -105,8 +123,8 @@ const AuthForm = ({ type, setAuthType }: AuthFormProps) => {
           cyan
           fullWidth
           disabled={
-            userInfo.email.includes('@' && '.com') &&
-            userInfo.password.length > 7
+            userInfo[type].email.includes('@' && '.com') &&
+            userInfo[type].password.length > 7
               ? false
               : true
           }
