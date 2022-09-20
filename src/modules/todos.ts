@@ -1,8 +1,7 @@
 // 액션 타입
 const CHANGE_INPUT = 'todo/CHANGE_INPUT';
 const INSERT = 'todo/INSERT';
-const TOGGLE = 'todo/TOGGLE';
-const REMOVE = 'todo/REMOVE';
+const EDIT = 'todo/EDIT';
 
 interface ActionType {
   type: string;
@@ -27,17 +26,21 @@ export const insert = (text: string) => ({
   },
 });
 
-export const toggle = (id: number) => ({
-  type: TOGGLE,
-  id,
+export const edit = (text: string, isCompleted: boolean) => ({
+  type: EDIT,
+  todo: {
+    id,
+    text,
+    isCompleted,
+  },
 });
 
-export const remove = (id: number) => ({
-  type: REMOVE,
-  id,
-});
+export interface IInitialState {
+  input: string;
+  todos: { id: number; text: string; isCompleted: boolean }[];
+}
 
-const initialState = {
+const initialState: IInitialState = {
   input: '',
   todos: [
     {
@@ -59,21 +62,10 @@ function todos(state = initialState, action: ActionType) {
     case INSERT:
       return {
         ...state,
-        todos: state.todos.concat(action.todo),
       };
-    case TOGGLE:
+    case EDIT:
       return {
         ...state,
-        todos: state.todos.map(todo =>
-          todo.id === action.id
-            ? { ...todo, isCompleted: !todo.isCompleted }
-            : todo
-        ),
-      };
-    case REMOVE:
-      return {
-        ...state,
-        todos: state.todos.filter(todo => todo.id !== action.id),
       };
     default:
       return state;

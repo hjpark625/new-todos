@@ -6,6 +6,7 @@ import TodoList from '../../components/Todos/TodoList';
 import { ref, onValue } from 'firebase/database';
 import { db } from '../../firebase';
 import { ITodos } from '../../components/types/Todo.type';
+// import { useDispatch, useSelector } from 'react-redux';
 
 function Todo() {
   const [todos, setTodos] = useState<ITodos[] | null>(null);
