@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useLayoutEffect } from 'react';
 import { remove, ref, update } from 'firebase/database';
 import { db } from '../../firebase';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -11,6 +11,11 @@ function TodoListItem({ items }: TodoProps) {
   const { text, isCompleted, id } = items;
   const [isDone, setIsDone] = useState(isCompleted);
   const [isEdit, setIsEdit] = useState(false);
+
+  const editRef = useRef<HTMLInputElement | null>(null);
+  useLayoutEffect(() => {
+    editRef.current !== null && editRef.current.focus();
+  });
 
   const [editTodo, setEditTodo] = useState(text);
 
@@ -72,6 +77,7 @@ function TodoListItem({ items }: TodoProps) {
           <S.EditInput
             type="text"
             value={editTodo}
+            ref={editRef}
             onChange={e => {
               saveEditTodoText(e);
             }}
