@@ -43,7 +43,6 @@ const AuthForm = ({ type, setAuthType }: AuthFormProps) => {
     if (type === 'register') {
       await register(userInfo.register.email, userInfo.register.password)
         .then(res => {
-          console.info(res);
           set(ref(db, `users/${res.user.uid}`), {
             id: res.user.uid,
             email: res.user.email,

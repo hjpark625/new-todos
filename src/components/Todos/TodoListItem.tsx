@@ -47,7 +47,7 @@ function TodoListItem({ items }: TodoProps) {
     await update(editRef, {
       text: editTodo,
     }).catch(err => {
-      alert('수정 실패');
+      alert('수정에 실패하였습니다.');
       console.error(err);
     });
     setIsEdit(false);

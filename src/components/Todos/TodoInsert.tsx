@@ -40,7 +40,7 @@ function TodoInsert({
         isCompleted: false,
       });
     } catch (err) {
-      alert('수정에 실패하였습니다.');
+      alert('작성에 실패하였습니다..');
       console.error(err);
     } finally {
       dispatch(changeInput(''));
