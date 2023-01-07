@@ -1,16 +1,21 @@
-export interface ITodos {
+export interface TodoItem {
   id: number;
   text: string;
   isCompleted: boolean;
 }
-export interface TodosProps {
-  todos: ITodos[] | null;
+export interface TodoListProps {
+  todos: TodoItem[] | null;
 }
 
-export interface TodoProps {
-  items: ITodos;
+export interface TodoListItemProps {
+  items: TodoItem;
 }
 
 export interface StyleProps {
   isCompleted: boolean | null;
+}
+
+export interface TodoInsertProps {
+  setTodoId: React.Dispatch<React.SetStateAction<number>>;
+  todoId: number;
 }

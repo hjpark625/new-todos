@@ -4,10 +4,10 @@ import { db } from '../../firebase';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquare, faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { faPen, faSquareCheck } from '@fortawesome/free-solid-svg-icons';
-import { TodoProps } from '../types/Todo.type';
 import * as S from './styles/TodoListItem.styled';
+import type { TodoListItemProps } from '../types/Todo.type';
 
-function TodoListItem({ items }: TodoProps) {
+function TodoListItem({ items }: TodoListItemProps) {
   const { text, isCompleted, id } = items;
   const [isDone, setIsDone] = useState(isCompleted);
   const [isEdit, setIsEdit] = useState(false);
@@ -47,8 +47,7 @@ function TodoListItem({ items }: TodoProps) {
     await update(editRef, {
       text: editTodo,
     }).catch(err => {
-      alert('수정에 실패하였습니다.');
-      console.error(err);
+      alert(`수정에 실패하였습니다. ${err}`);
     });
     setIsEdit(false);
   };

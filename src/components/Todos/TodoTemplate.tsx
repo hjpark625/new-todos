@@ -1,7 +1,7 @@
 import React from 'react';
-import { logout } from '../../firebase';
-import { getAuth } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
+import { getAuth } from 'firebase/auth';
+import { logout } from '../../firebase';
 import * as S from './styles/TodoTemplate.styled';
 
 interface ChildrenProps {

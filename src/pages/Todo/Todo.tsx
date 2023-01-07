@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TodoTemplate from '../../components/Todos/TodoTemplate';
 import TodoInsert from '../../components/Todos/TodoInsert';
 import TodoList from '../../components/Todos/TodoList';
 import { ref, onValue } from 'firebase/database';
 import { db } from '../../firebase';
-import { ITodos } from '../../components/types/Todo.type';
-// import { useDispatch, useSelector } from 'react-redux';
+import type { TodoItem } from '../../components/types/Todo.type';
 
 function Todo() {
-  const [todos, setTodos] = useState<ITodos[] | null>(null);
+  const [todos, setTodos] = useState<TodoItem[] | null>(null);
   const [todoId, setTodoId] = useState(0);
   const navigate = useNavigate();
 
   const token = localStorage.getItem('uid');
+  const storageTodoId = localStorage.getItem('todoId');
 
   const checkToken = () => {
     !token && navigate('/');
@@ -23,15 +23,16 @@ function Todo() {
     const todoRef = ref(db, `/todos/${token}`);
     onValue(todoRef, res => {
       setTodos(res.val());
+      if (!res.val()) localStorage.removeItem('todoId');
     });
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     checkToken();
+    if (storageTodoId) setTodoId(Math.round(parseInt(storageTodoId) + 1));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token]);
+  }, [token, storageTodoId]);
 
   return (
     <TodoTemplate>

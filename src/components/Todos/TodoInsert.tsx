@@ -3,24 +3,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { set, ref } from 'firebase/database';
 import { db } from '../../firebase';
-import * as S from './styles/TodoInsert.styled';
 import { changeInput } from '../../modules/todos';
+import * as S from './styles/TodoInsert.styled';
+import type { TodoInsertProps } from '../types/Todo.type';
+import type { RootState, AppDispatch } from '../../modules/index';
 
-interface StateProps {
-  todos: {
-    input: string;
-  };
-}
-
-function TodoInsert({
-  setTodoId,
-  todoId,
-}: {
-  setTodoId: React.Dispatch<React.SetStateAction<number>>;
-  todoId: number;
-}) {
-  const dispatch = useDispatch();
-  const todoValue = useSelector((state: StateProps) => state.todos.input);
+function TodoInsert({ setTodoId, todoId }: TodoInsertProps) {
+  const dispatch = useDispatch<AppDispatch>();
+  const todoValue = useSelector((state: RootState) => state.todos.input);
 
   const token = localStorage.getItem('uid');
 
@@ -34,14 +24,15 @@ function TodoInsert({
       const postDB = ref(db, `/todos/${token}/${todoId}`);
       e.preventDefault();
       setTodoId(prev => prev + 1);
+      if (todoValue.length === 0) return alert('내용을 입력해주세요');
       await set(postDB, {
         id: todoId,
         text: todoValue,
         isCompleted: false,
       });
+      localStorage.setItem('todoId', `${todoId}`);
     } catch (err) {
-      alert('작성에 실패하였습니다..');
-      console.error(err);
+      alert(`작성에 실패하였습니다.. ${err}`);
     } finally {
       dispatch(changeInput(''));
     }

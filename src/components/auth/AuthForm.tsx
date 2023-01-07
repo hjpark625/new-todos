@@ -1,29 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { TextMap } from '../types/Auth.type';
-import { AuthFormProps } from '../types/Auth.type';
-import { changeField, RootState } from '../../modules/auth';
+import { changeField } from '../../modules/auth';
 import { register, db, login } from '../../firebase';
 import { child, ref, set, get } from 'firebase/database';
+import { setAuthType } from '../../modules/auth';
 import * as S from './styles/AuthForm.styled';
+import type { AppDispatch, RootState } from '../../modules';
+import type { AuthType } from '../types/Auth.type';
+import type { AuthFormProps } from '../types/Auth.type';
 
-const textMap: TextMap = {
+const textMap: AuthType = {
   login: '로그인',
   register: '회원가입',
 };
 
-interface StateProps {
-  auth: RootState;
-}
-
-const AuthForm = ({ type, setAuthType }: AuthFormProps) => {
-  const dispatch = useDispatch();
+const AuthForm = ({ type }: AuthFormProps) => {
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
   const [error, setError] = useState<string | null>(null);
 
-  const userInfo = useSelector((state: StateProps) => state.auth);
+  const userInfo = useSelector((state: RootState) => state.auth);
 
   const text = textMap[type];
 
@@ -135,7 +133,7 @@ const AuthForm = ({ type, setAuthType }: AuthFormProps) => {
         {type === 'login' ? (
           <S.ChangeAuthButton
             onClick={() => {
-              setAuthType('register');
+              dispatch(setAuthType('register'));
             }}
           >
             회원가입
@@ -143,7 +141,7 @@ const AuthForm = ({ type, setAuthType }: AuthFormProps) => {
         ) : (
           <S.ChangeAuthButton
             onClick={() => {
-              setAuthType('login');
+              dispatch(setAuthType('login'));
             }}
           >
             로그인
