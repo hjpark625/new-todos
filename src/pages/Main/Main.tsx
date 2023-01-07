@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import Login from './Login';
 import Register from './Register';
+import type { RootState } from '../../modules/index';
 
 function Main() {
-  const [authType, setAuthType] = useState('login');
   const navigate = useNavigate();
   const token = localStorage.getItem('uid');
+
+  const authType = useSelector((state: RootState) => state.auth.authType);
 
   const checkToken = () => {
     token && navigate('/todo');
@@ -20,9 +23,9 @@ function Main() {
   return (
     <div>
       {authType === 'login' ? (
-        <Login setAuthType={setAuthType} />
+        <Login />
       ) : (
-        authType === 'register' && <Register setAuthType={setAuthType} />
+        authType === 'register' && <Register />
       )}
     </div>
   );

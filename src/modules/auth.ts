@@ -1,44 +1,22 @@
+import { createAction, createReducer } from '@reduxjs/toolkit';
+import type { AuthType } from '../components/types/Auth.type';
+
 const CHANGE_FIELD = 'auth/CHANGE_FIELD';
+const SET_AUTHTYPE = 'auth/SET_AUTHTYPE';
 const INITIALIZE_FORM = 'auth/INITIALIZE_FORM';
 
-interface IChangeField {
-  form: string;
+export const changeField = createAction<{
+  form: keyof AuthType;
   key: string;
   value: string;
-}
+}>(CHANGE_FIELD);
 
-interface IAction {
-  type: string;
-  form: 'register' | 'login';
-  key: string;
-  value: string;
-  auth: string;
-}
+export const setAuthType = createAction<string>(SET_AUTHTYPE);
 
-export const changeField = ({ form, key, value }: IChangeField) => ({
-  type: CHANGE_FIELD,
-  form,
-  key,
-  value,
-});
+export const initializeForm = createAction<string>(INITIALIZE_FORM);
 
-export const initializeForm = (form: string) => ({
-  type: INITIALIZE_FORM,
-  form,
-});
-
-export interface RootState {
-  register: {
-    email: string;
-    password: string;
-  };
-  login: {
-    email: string;
-    password: string;
-  };
-}
-
-const initialState: RootState = {
+const initialState = {
+  authType: 'login',
   register: {
     email: '',
     password: '',
@@ -49,17 +27,19 @@ const initialState: RootState = {
   },
 };
 
-function auth(state = initialState, action: IAction) {
-  switch (action.type) {
-    case CHANGE_FIELD:
-      return {
-        ...state,
-        [action.form]: { ...state[action.form], [action.key]: action.value },
-      };
-
-    default:
-      return state;
-  }
-}
+const auth = createReducer(initialState, builder => {
+  builder
+    .addCase(changeField, (state, { payload }) => ({
+      ...state,
+      [payload.form]: {
+        ...state[payload.form],
+        [payload.key]: payload.value,
+      },
+    }))
+    .addCase(setAuthType, (state, { payload }) => ({
+      ...state,
+      authType: payload,
+    }));
+});
 
 export default auth;

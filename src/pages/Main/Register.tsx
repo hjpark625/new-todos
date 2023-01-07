@@ -1,15 +1,10 @@
-import React from 'react';
 import AuthTemplate from '../../components/auth/AuthTemplate';
 import AuthForm from '../../components/auth/AuthForm';
 
-function Register({
-  setAuthType,
-}: {
-  setAuthType: React.Dispatch<React.SetStateAction<string>>;
-}) {
+function Register() {
   return (
     <AuthTemplate>
-      <AuthForm type="register" setAuthType={setAuthType} />
+      <AuthForm type="register" />
     </AuthTemplate>
   );
 }

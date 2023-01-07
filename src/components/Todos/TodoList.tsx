@@ -1,8 +1,8 @@
 import TodoListItem from './TodoListItem';
-import { TodosProps } from '../types/Todo.type';
 import * as S from './styles/TodoList.styled';
+import type { TodoListProps } from '../types/Todo.type';
 
-function TodoList({ todos }: TodosProps) {
+function TodoList({ todos }: TodoListProps) {
   return (
     <S.TodoListWrapper>
       {todos === null ? (

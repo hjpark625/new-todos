@@ -1,10 +1,9 @@
-export interface TextMap {
+export interface AuthType {
   login: string;
   register: string;
 }
 export interface AuthFormProps {
-  type: keyof TextMap;
-  setAuthType: React.Dispatch<React.SetStateAction<string>>;
+  type: keyof AuthType;
 }
 export interface UserInfo {
   email: string;
