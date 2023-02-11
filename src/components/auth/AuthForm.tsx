@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeField } from '../../modules/auth';
 import { register, db, login } from '../../firebase';
-import { child, ref, set, get } from 'firebase/database';
+import { doc, setDoc } from 'firebase/firestore';
 import { setAuthType } from '../../modules/auth';
 import * as S from './styles/AuthForm.styled';
 import type { AppDispatch, RootState } from '../../modules';
@@ -41,7 +41,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
     if (type === 'register') {
       await register(userInfo.register.email, userInfo.register.password)
         .then(res => {
-          set(ref(db, `users/${res.user.uid}`), {
+          setDoc(doc(db, 'users', `${res.user.uid}`), {
             id: res.user.uid,
             email: res.user.email,
           });
@@ -57,10 +57,8 @@ const AuthForm = ({ type }: AuthFormProps) => {
           }
         });
     } else if (type === 'login') {
-      const dbRef = ref(db);
       await login(userInfo.login.email, userInfo.login.password)
         .then(res => {
-          get(child(dbRef, `users/${res.user.uid}`));
           localStorage.setItem('uid', res.user.uid);
           alert(`어서오세요 ${res.user.email}님`);
           navigate('/todo');

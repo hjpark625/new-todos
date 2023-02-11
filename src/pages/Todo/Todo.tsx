@@ -3,40 +3,48 @@ import { useNavigate } from 'react-router-dom';
 import TodoTemplate from '../../components/Todos/TodoTemplate';
 import TodoInsert from '../../components/Todos/TodoInsert';
 import TodoList from '../../components/Todos/TodoList';
-import { ref, onValue } from 'firebase/database';
+import { query, collection, where, onSnapshot } from 'firebase/firestore';
 import { db } from '../../firebase';
 import type { TodoItem } from '../../components/types/Todo.type';
 
 function Todo() {
   const [todos, setTodos] = useState<TodoItem[] | null>(null);
-  const [todoId, setTodoId] = useState(0);
+
   const navigate = useNavigate();
 
   const token = localStorage.getItem('uid');
-  const storageTodoId = localStorage.getItem('todoId');
 
   const checkToken = () => {
     !token && navigate('/');
   };
 
-  useEffect(() => {
-    const todoRef = ref(db, `/todos/${token}`);
-    onValue(todoRef, res => {
-      setTodos(res.val());
-      if (!res.val()) localStorage.removeItem('todoId');
+  const getDatas = async () => {
+    const q = query(collection(db, 'todos'), where('uid', '==', `${token}`));
+
+    onSnapshot(q, querySnapshot => {
+      const datas: TodoItem[] = [];
+      querySnapshot.forEach(document => {
+        const results = document.data() as TodoItem;
+        datas.push({ ...results, id: document.id });
+        datas.sort((a, b) => a.createdAt.seconds - b.createdAt.seconds);
+      });
+      if (datas.every(user => user.uid === `${token}`)) {
+        setTodos(datas);
+      } else {
+        setTodos(null);
+      }
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  };
 
   useEffect(() => {
     checkToken();
-    if (storageTodoId) setTodoId(Math.round(parseInt(storageTodoId) + 1));
+    getDatas();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token, storageTodoId]);
+  }, [token]);
 
   return (
     <TodoTemplate>
-      <TodoInsert setTodoId={setTodoId} todoId={todoId} />
+      <TodoInsert />
       <TodoList todos={todos} />
     </TodoTemplate>
   );

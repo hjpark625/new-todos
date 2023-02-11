@@ -5,7 +5,7 @@ import { logout } from '../../firebase';
 import * as S from './styles/TodoTemplate.styled';
 
 interface ChildrenProps {
-  children: JSX.Element | React.ReactElement | React.ReactNode;
+  children: React.ReactNode;
 }
 
 function TodoTemplate({ children }: ChildrenProps) {

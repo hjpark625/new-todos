@@ -5,8 +5,9 @@ import {
   signInWithEmailAndPassword,
   signOut,
   Auth,
+  updateProfile,
 } from 'firebase/auth';
-import { getDatabase } from 'firebase/database';
+import { getFirestore } from 'firebase/firestore';
 import 'firebase/storage';
 
 const firebaseConfig = {
@@ -21,9 +22,8 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-const auth = getAuth(app);
-
-export const db = getDatabase();
+export const auth = getAuth(app);
+export const db = getFirestore(app);
 
 export const register = (email: string, password: string) => {
   return createUserWithEmailAndPassword(auth, email, password);
@@ -35,4 +35,9 @@ export const login = (email: string, password: string) => {
 
 export const logout = (auth: Auth) => {
   return signOut(auth);
+};
+
+export const updateUser = async (userName: string) => {
+  if (auth.currentUser == null) return alert('오류 발생!');
+  else return await updateProfile(auth.currentUser, { displayName: userName });
 };

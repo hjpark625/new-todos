@@ -1,5 +1,5 @@
 import React, { useState, useRef, useLayoutEffect } from 'react';
-import { remove, ref, update } from 'firebase/database';
+import { doc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquare, faTrashCan } from '@fortawesome/free-regular-svg-icons';
@@ -9,23 +9,18 @@ import type { TodoListItemProps } from '../types/Todo.type';
 
 function TodoListItem({ items }: TodoListItemProps) {
   const { text, isCompleted, id } = items;
-  const [isDone, setIsDone] = useState(isCompleted);
   const [isEdit, setIsEdit] = useState(false);
+  const [editTodo, setEditTodo] = useState(text);
 
   const editRef = useRef<HTMLInputElement | null>(null);
   useLayoutEffect(() => {
     editRef.current !== null && editRef.current.focus();
   });
 
-  const [editTodo, setEditTodo] = useState(text);
-
-  const token = localStorage.getItem('uid');
-
   const getDoneTodo = async () => {
-    const doneRef = ref(db, `todos/${token}/${id}`);
-    setIsDone(!isDone);
-    await update(doneRef, {
-      isCompleted: isDone,
+    const doneRef = doc(db, 'todos', `${id}`);
+    await updateDoc(doneRef, {
+      isCompleted: !isCompleted,
     }).catch(err => {
       alert('오류가 발생했습니다.');
       console.error(err);
@@ -33,8 +28,8 @@ function TodoListItem({ items }: TodoListItemProps) {
   };
 
   const deleteTodo = async () => {
-    const deleteRef = ref(db, `todos/${token}/${id}`);
-    remove(deleteRef);
+    const deleteRef = doc(db, 'todos', `${id}`);
+    await deleteDoc(deleteRef);
   };
 
   const saveEditTodoText = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,8 +38,8 @@ function TodoListItem({ items }: TodoListItemProps) {
 
   const editSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const editRef = ref(db, `todos/${token}/${id}`);
-    await update(editRef, {
+    const editRef = doc(db, 'todos', `${id}`);
+    await updateDoc(editRef, {
       text: editTodo,
     }).catch(err => {
       alert(`수정에 실패하였습니다. ${err}`);
