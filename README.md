@@ -33,6 +33,17 @@
 
 ---
 
+## 🔐 배포 테스트 계정
+
+<br />
+
+> id(email): tester@naver.com  
+> password: 1q2w3e4r!
+
+<br/>
+
+---
+
 ## 📚 기술스택
 
 <br />
@@ -99,61 +110,61 @@
 
 ## 📝 구현 기능
 
-- Firebase 회원가입 및 로그인 기능 구현 및 DB구축
+### Firebase 회원가입 및 로그인 기능 구현 및 DB구축
 
-  - 회원가입
-    - 회원가입은 `firebase`에서 `createUserWithEmailAndPassword`메소드를 제공해준다.
-    - 위의 메소드를 활용해서 `firebase.ts`에 `register`함수를 제작해주었다.
-      ```ts
-      export const register = (email: string, password: string) => {
-        return createUserWithEmailAndPassword(auth, email, password);
-      };
-      ```
-  - 로그인
-    - 로그인은 `firebase`에서 `signInWithEmailAndPassword`메소드를 제공해준다.
-    - 위의 메소드를 활용해서 마찬가지로 `firebase.ts`에 `login`함수를 제작했다.
-      ```ts
-      export const login = (email: string, password: string) => {
-        return signInWithEmailAndPassword(auth, email, password);
-      };
-      ```
-  - 회원가입 및 로그인 할 때 `firebase`에서 성공했을 때의 응답을 `Realtime Database`에 `set`메소드를 활용해 유저데이터의 `email`과 `uid`를 저장했으며 추후 Todos리스트에 로그인 했을 때 각 고유별로 Todo를 갖게 하기 위해 `uid`를 활용하여 로그인 기능을 같이 구현하였다.
-  - DB는 `Realtime Database`를 활용하여 구축을 했다.
+- 회원가입
+  - 회원가입은 `firebase`에서 `createUserWithEmailAndPassword`메소드를 제공해준다.
+  - 위의 메소드를 활용해서 `firebase.ts`에 `register`함수를 제작해주었다.
+    ```ts
+    export const register = (email: string, password: string) => {
+      return createUserWithEmailAndPassword(auth, email, password);
+    };
+    ```
+- 로그인
+  - 로그인은 `firebase`에서 `signInWithEmailAndPassword`메소드를 제공해준다.
+  - 위의 메소드를 활용해서 마찬가지로 `firebase.ts`에 `login`함수를 제작했다.
+    ```ts
+    export const login = (email: string, password: string) => {
+      return signInWithEmailAndPassword(auth, email, password);
+    };
+    ```
+- 회원가입 및 로그인 할 때 `firebase`에서 성공했을 때의 응답을 `Realtime Database`에 `set`메소드를 활용해 유저데이터의 `email`과 `uid`를 저장했으며 추후 Todos리스트에 로그인 했을 때 각 고유별로 Todo를 갖게 하기 위해 `uid`를 활용하여 로그인 기능을 같이 구현하였다.
+- DB는 `Realtime Database`를 활용하여 구축을 했다.
 
-    - `firebase.ts`에서 `getDatabase`를 활용해서 db라는 이름의 변수를 만들어 주었고 그 db를 활용해서 CRUD에 활용하였다.
-    - db를 활용하기 위해서는 `ref`라는 메소드를 같이 활용해서 데이터가 입력되고 요청되어야 할 db의 url을 지정해줘야 한다.
-
-      ```ts
-      /* AuthForm.tsx - handleSubmit */
-      if (type === 'register') {
-      await register(userInfo.register.email, userInfo.register.password)
-        .then(res => {
-          set(ref(db, `users/${res.user.uid}`), { // set메소드에 ref를 달아준다.(데이터 베이스를 찾아가게 하기 위한 목적)
-            id: res.user.uid,
-            email: res.user.email,
-          });
-          alert('회원가입 성공!');
-          navigate('/todo');
-        })
-        /* ... */
-      ```
-
-- TodoList 가져오기
-
-  - `get`메소드를 활용해 데이터베이스에서 해당 유저 `uid`에 맞는 Todo 데이터를 가져온다
+  - `firebase.ts`에서 `getDatabase`를 활용해서 db라는 이름의 변수를 만들어 주었고 그 db를 활용해서 CRUD에 활용하였다.
+  - db를 활용하기 위해서는 `ref`라는 메소드를 같이 활용해서 데이터가 입력되고 요청되어야 할 db의 url을 지정해줘야 한다.
 
     ```ts
-    const token = localStorage.getItem('uid'); // 로그인 시 유저의 uid를 로컬스토리지에 저장한 후 활용하는 상태
-
-    useEffect(() => {
-      const todoRef = ref(db, `/todos/${token}`);
-      onValue(todoRef, res => {
-        setTodos(res.val());
-      });
-    }, []);
+    /* AuthForm.tsx - handleSubmit */
+    if (type === 'register') {
+    await register(userInfo.register.email, userInfo.register.password)
+      .then(res => {
+        set(ref(db, `users/${res.user.uid}`), { // set메소드에 ref를 달아준다.(데이터 베이스를 찾아가게 하기 위한 목적)
+          id: res.user.uid,
+          email: res.user.email,
+        });
+        alert('회원가입 성공!');
+        navigate('/todo');
+      })
+      /* ... */
     ```
 
-  - 로그인 후 Todo앱으로 `navigate`될 때 최초 TodoList를 한 번 만 받아와서 렌더링을 하기 때문에 `useEffect`를 활용하였다.
+### TodoList 가져오기
+
+- `get`메소드를 활용해 데이터베이스에서 해당 유저 `uid`에 맞는 Todo 데이터를 가져온다
+
+  ```ts
+  const token = localStorage.getItem('uid'); // 로그인 시 유저의 uid를 로컬스토리지에 저장한 후 활용하는 상태
+
+  useEffect(() => {
+    const todoRef = ref(db, `/todos/${token}`);
+    onValue(todoRef, res => {
+      setTodos(res.val());
+    });
+  }, []);
+  ```
+
+- 로그인 후 Todo앱으로 `navigate`될 때 최초 TodoList를 한 번 만 받아와서 렌더링을 하기 때문에 `useEffect`를 활용하였다.
 
 - TodoList 추가하기
 
@@ -181,51 +192,61 @@
 
     - submit할 때도 마찬가지로 `set`메소드와 `ref`메소드를 활용해 데이터베이스에 해당 유저 `uid`주소의 데이터베이스에 `POST`를 한다.
 
-- TodoList 수정하기
+### TodoList 수정하기
 
-  - 수정하기는 `update`메소드를 활용해서 Todo의 수정과 완료/미완료 처리를 구현하였다.
+- 수정하기는 `update`메소드를 활용해서 Todo의 수정과 완료/미완료 처리를 구현하였다.
 
-    ```ts
-    // Todo를 수정하는 함수
-    const editSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      const editRef = ref(db, `todos/${token}/${id}`);
-      await update(editRef, {
-        text: editTodo,
-      }).catch(err => {
-        alert('수정에 실패하였습니다.');
-        console.error(err);
-      });
-      setIsEdit(false);
-    };
-
-    // Todo의 완료/미완료를 수정하는 함수
-    const getDoneTodo = async () => {
-      const doneRef = ref(db, `todos/${token}/${id}`);
-      setIsDone(!isDone);
-      await update(doneRef, {
-        isCompleted: isDone,
-      }).catch(err => {
-        alert('오류가 발생했습니다.');
-        console.error(err);
-      });
-    };
-    ```
-
-  - 부가적으로 수정할 때 수정아이콘을 클릭하면 수정하는 input으로 focus되도록 같이 구현하였다.
-    ```ts
-    const editRef = useRef<HTMLInputElement | null>(null); // ref를 수정버튼 클릭시 input창에 props로 전달
-    useLayoutEffect(() => {
-      // useLayoutEffect를 활용해 해당 input으로 focus되도록 처리
-      editRef.current !== null && editRef.current.focus();
+  ```ts
+  // Todo를 수정하는 함수
+  const editSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const editRef = ref(db, `todos/${token}/${id}`);
+    await update(editRef, {
+      text: editTodo,
+    }).catch(err => {
+      alert('수정에 실패하였습니다.');
+      console.error(err);
     });
-    ```
+    setIsEdit(false);
+  };
 
-- TodoList 삭제하기
-  - 삭제는 매우 간단하게 `remove`메소드를 활용해서 삭제버튼 클릭 시 해당 id를 가진 Todo데이터를 삭제하는 것으로 구현했다.
-    ```ts
-    const deleteTodo = async () => {
-      const deleteRef = ref(db, `todos/${token}/${id}`);
-      remove(deleteRef);
-    };
-    ```
+  // Todo의 완료/미완료를 수정하는 함수
+  const getDoneTodo = async () => {
+    const doneRef = ref(db, `todos/${token}/${id}`);
+    setIsDone(!isDone);
+    await update(doneRef, {
+      isCompleted: isDone,
+    }).catch(err => {
+      alert('오류가 발생했습니다.');
+      console.error(err);
+    });
+  };
+  ```
+
+- 부가적으로 수정할 때 수정아이콘을 클릭하면 수정하는 input으로 focus되도록 같이 구현하였다.
+  ```ts
+  const editRef = useRef<HTMLInputElement | null>(null); // ref를 수정버튼 클릭시 input창에 props로 전달
+  useLayoutEffect(() => {
+    // useLayoutEffect를 활용해 해당 input으로 focus되도록 처리
+    editRef.current !== null && editRef.current.focus();
+  });
+  ```
+
+### TodoList 삭제하기
+
+- 삭제는 매우 간단하게 `remove`메소드를 활용해서 삭제버튼 클릭 시 해당 id를 가진 Todo데이터를 삭제하는 것으로 구현했다.
+  ```ts
+  const deleteTodo = async () => {
+    const deleteRef = ref(db, `todos/${token}/${id}`);
+    remove(deleteRef);
+  };
+  ```
+
+### Realtime DB에서 FireStore DB로 마이그레이션(23. 2. 11(토) 완료))
+
+- FireStore는 쿼리 중심의 데이터베이스로 개인적으로 Realtime보다 FireStore 데이터베이스가 인덱싱부터 데이터 관리 측면에 있어 더 효율적이라고 판단되어 마이그레이션을 진행했다.
+  - 메서드 들은 Realtime과 큰 차이는 없으며 중점적으로 변경된 사항은 realtime은 ref라는 메서드를 활용해서 데이터 베이스에 접근했지만 firestore는 컬렉션을 기준으로 접근을 한다는 차이가 있다.
+  - 초기 데이터를 todos데이터를 불러오는데 있어 사용한 메서드는 query와 onSnapshot이라는 메서드로 get을 사용하던 realtime과의 차이가 있다.
+  - 데이터의 추가에 있어서는 realtime은 set, firestore는 addDoc 혹은 setDoc을 사용
+  - 삭제는 realtime에서는 remove, firestore는 deleteDoc
+  - 수정은 realtime에선 update, firestore는 updateDoc으로 활용된다.
