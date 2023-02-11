@@ -1,6 +1,11 @@
 export interface TodoItem {
-  id: number;
+  id: string;
+  uid: string;
   text: string;
+  createdAt: {
+    nanoseconds: number;
+    seconds: number;
+  };
   isCompleted: boolean;
 }
 export interface TodoListProps {
@@ -13,9 +18,4 @@ export interface TodoListItemProps {
 
 export interface StyleProps {
   isCompleted: boolean | null;
-}
-
-export interface TodoInsertProps {
-  setTodoId: React.Dispatch<React.SetStateAction<number>>;
-  todoId: number;
 }
