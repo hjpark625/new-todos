@@ -47,7 +47,8 @@ const AuthForm = ({ type }: AuthFormProps) => {
           }
         );
         alert('회원가입 성공!');
-        localStorage.setItem('id', response.data._id);
+        localStorage.setItem('id', response.data.info._id);
+        localStorage.setItem('access_token', response.data.info.access_token);
         navigate('/todo');
       } catch (e) {
         alert('회원가입 실패');
@@ -61,8 +62,10 @@ const AuthForm = ({ type }: AuthFormProps) => {
             password: userInfo.login.password,
           }
         );
-        alert(`어서오세요! ${response.data.email}님`);
-        localStorage.setItem('id', response.data._id);
+        alert(`어서오세요! ${response.data.info.username}님`);
+        localStorage.setItem('id', response.data.info._id);
+        localStorage.setItem('access_token', response.data.access_token);
+        navigate('/todo');
       } catch (e) {
         alert('로그인 실패');
       }

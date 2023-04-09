@@ -7,7 +7,7 @@ import type { RootState } from '../../modules/index';
 
 function Main() {
   const navigate = useNavigate();
-  const token = localStorage.getItem('uid');
+  const token = localStorage.getItem('access_token');
 
   const authType = useSelector((state: RootState) => state.auth.authType);
 
