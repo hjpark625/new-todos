@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import TodoTemplate from '../../components/Todos/TodoTemplate';
 import TodoInsert from '../../components/Todos/TodoInsert';
 import TodoList from '../../components/Todos/TodoList';
@@ -19,21 +20,32 @@ function Todo() {
   };
 
   const getDatas = async () => {
-    const q = query(collection(db, 'todos'), where('uid', '==', `${token}`));
-
-    onSnapshot(q, querySnapshot => {
-      const datas: TodoItem[] = [];
-      querySnapshot.forEach(document => {
-        const results = document.data() as TodoItem;
-        datas.push({ ...results, id: document.id });
-        datas.sort((a, b) => a.createdAt.seconds - b.createdAt.seconds);
+    try {
+      const response = await axios.get('http://localhost:4000/api/todos', {
+        withCredentials: true,
       });
-      if (datas.every(user => user.uid === `${token}`)) {
-        setTodos(datas);
-      } else {
-        setTodos(null);
-      }
-    });
+      const { data } = response;
+      setTodos(data);
+      return;
+    } catch (e) {
+      return console.log(e);
+    }
+
+    // const q = query(collection(db, 'todos'), where('uid', '==', `${token}`));
+
+    // onSnapshot(q, querySnapshot => {
+    //   const datas: TodoItem[] = [];
+    //   querySnapshot.forEach(document => {
+    //     const results = document.data() as TodoItem;
+    //     datas.push({ ...results, id: document.id });
+    //     datas.sort((a, b) => a.createdAt.seconds - b.createdAt.seconds);
+    //   });
+    //   if (datas.every(user => user.uid === `${token}`)) {
+    //     setTodos(datas);
+    //   } else {
+    //     setTodos(null);
+    //   }
+    // });
   };
 
   useEffect(() => {

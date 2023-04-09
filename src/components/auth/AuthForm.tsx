@@ -44,11 +44,14 @@ const AuthForm = ({ type }: AuthFormProps) => {
           {
             email: userInfo.register.email,
             password: userInfo.register.password,
+          },
+          {
+            withCredentials: true,
           }
         );
         alert('회원가입 성공!');
-        localStorage.setItem('id', response.data.info._id);
-        localStorage.setItem('access_token', response.data.info.access_token);
+        localStorage.setItem('id', response.data.user.info._id);
+        localStorage.setItem('access_token', response.data.user.access_token);
         navigate('/todo');
       } catch (e) {
         alert('회원가입 실패');
@@ -60,11 +63,14 @@ const AuthForm = ({ type }: AuthFormProps) => {
           {
             email: userInfo.login.email,
             password: userInfo.login.password,
+          },
+          {
+            withCredentials: true,
           }
         );
-        alert(`어서오세요! ${response.data.info.username}님`);
-        localStorage.setItem('id', response.data.info._id);
-        localStorage.setItem('access_token', response.data.access_token);
+        alert(`어서오세요! ${response.data.user.info.username}님`);
+        localStorage.setItem('id', response.data.user.info._id);
+        localStorage.setItem('access_token', response.data.user.access_token);
         navigate('/todo');
       } catch (e) {
         alert('로그인 실패');

@@ -8,7 +8,7 @@ import * as S from './styles/TodoListItem.styled';
 import type { TodoListItemProps } from '../types/Todo.type';
 
 function TodoListItem({ items }: TodoListItemProps) {
-  const { text, isCompleted, id } = items;
+  const { text, isCompleted, _id } = items;
   const [isEdit, setIsEdit] = useState(false);
   const [editTodo, setEditTodo] = useState(text);
 
@@ -18,7 +18,7 @@ function TodoListItem({ items }: TodoListItemProps) {
   });
 
   const getDoneTodo = async () => {
-    const doneRef = doc(db, 'todos', `${id}`);
+    const doneRef = doc(db, 'todos', `${_id}`);
     await updateDoc(doneRef, {
       isCompleted: !isCompleted,
     }).catch(err => {
@@ -28,7 +28,7 @@ function TodoListItem({ items }: TodoListItemProps) {
   };
 
   const deleteTodo = async () => {
-    const deleteRef = doc(db, 'todos', `${id}`);
+    const deleteRef = doc(db, 'todos', `${_id}`);
     await deleteDoc(deleteRef);
   };
 
@@ -38,7 +38,7 @@ function TodoListItem({ items }: TodoListItemProps) {
 
   const editSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const editRef = doc(db, 'todos', `${id}`);
+    const editRef = doc(db, 'todos', `${_id}`);
     await updateDoc(editRef, {
       text: editTodo,
     }).catch(err => {

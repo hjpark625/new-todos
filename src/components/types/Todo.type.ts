@@ -1,11 +1,7 @@
 export interface TodoItem {
-  id: string;
-  uid: string;
+  _id: string;
   text: string;
-  createdAt: {
-    nanoseconds: number;
-    seconds: number;
-  };
+  createdAt: Date;
   isCompleted: boolean;
 }
 export interface TodoListProps {
