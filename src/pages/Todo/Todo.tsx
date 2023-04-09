@@ -4,8 +4,6 @@ import axios from 'axios';
 import TodoTemplate from '../../components/Todos/TodoTemplate';
 import TodoInsert from '../../components/Todos/TodoInsert';
 import TodoList from '../../components/Todos/TodoList';
-import { query, collection, where, onSnapshot } from 'firebase/firestore';
-import { db } from '../../firebase';
 import type { TodoItem } from '../../components/types/Todo.type';
 
 function Todo() {
@@ -28,24 +26,9 @@ function Todo() {
       setTodos(data);
       return;
     } catch (e) {
+      alert('데이터를 불러오는데 실패했습니다.');
       return console.log(e);
     }
-
-    // const q = query(collection(db, 'todos'), where('uid', '==', `${token}`));
-
-    // onSnapshot(q, querySnapshot => {
-    //   const datas: TodoItem[] = [];
-    //   querySnapshot.forEach(document => {
-    //     const results = document.data() as TodoItem;
-    //     datas.push({ ...results, id: document.id });
-    //     datas.sort((a, b) => a.createdAt.seconds - b.createdAt.seconds);
-    //   });
-    //   if (datas.every(user => user.uid === `${token}`)) {
-    //     setTodos(datas);
-    //   } else {
-    //     setTodos(null);
-    //   }
-    // });
   };
 
   useEffect(() => {

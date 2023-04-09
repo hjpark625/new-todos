@@ -1,6 +1,5 @@
 import React, { useState, useRef, useLayoutEffect } from 'react';
-import { doc, deleteDoc, updateDoc } from 'firebase/firestore';
-import { db } from '../../firebase';
+import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquare, faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { faPen, faSquareCheck } from '@fortawesome/free-solid-svg-icons';
@@ -18,18 +17,23 @@ function TodoListItem({ items }: TodoListItemProps) {
   });
 
   const getDoneTodo = async () => {
-    const doneRef = doc(db, 'todos', `${_id}`);
-    await updateDoc(doneRef, {
-      isCompleted: !isCompleted,
-    }).catch(err => {
+    try {
+      await axios.patch(
+        `http://localhost:4000/api/todos/${_id}`,
+        {
+          isCompleted: !isCompleted,
+        },
+        { withCredentials: true }
+      );
+    } catch (e) {
       alert('오류가 발생했습니다.');
-      console.error(err);
-    });
+    }
   };
 
   const deleteTodo = async () => {
-    const deleteRef = doc(db, 'todos', `${_id}`);
-    await deleteDoc(deleteRef);
+    await axios.delete(`http://localhost:4000/api/todos/${_id}`, {
+      withCredentials: true,
+    });
   };
 
   const saveEditTodoText = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,12 +42,17 @@ function TodoListItem({ items }: TodoListItemProps) {
 
   const editSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const editRef = doc(db, 'todos', `${_id}`);
-    await updateDoc(editRef, {
-      text: editTodo,
-    }).catch(err => {
-      alert(`수정에 실패하였습니다. ${err}`);
-    });
+    try {
+      await axios.patch(
+        `http://localhost:4000/api/todos/${_id}`,
+        {
+          text: editTodo,
+        },
+        { withCredentials: true }
+      );
+    } catch (e) {
+      alert('수정에 실패하였습니다.');
+    }
     setIsEdit(false);
   };
 
