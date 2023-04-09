@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
 import { changeField } from '../../modules/auth';
-import { register, db, login } from '../../firebase';
-import { doc, setDoc } from 'firebase/firestore';
 import { setAuthType } from '../../modules/auth';
 import * as S from './styles/AuthForm.styled';
 import type { AppDispatch, RootState } from '../../modules';
@@ -39,42 +38,34 @@ const AuthForm = ({ type }: AuthFormProps) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (type === 'register') {
-      await register(userInfo.register.email, userInfo.register.password)
-        .then(res => {
-          setDoc(doc(db, 'users', `${res.user.uid}`), {
-            id: res.user.uid,
-            email: res.user.email,
-          });
-          alert('회원가입 성공!');
-          navigate('/todo');
-        })
-        .catch(err => {
-          switch (err.code) {
-            case 'auth/email-already-in-use':
-              return alert('이미 사용중인 이메일입니다.');
-            default:
-              return alert('회원가입 실패');
+      try {
+        const response = await axios.post(
+          'http://localhost:4000/api/auth/register',
+          {
+            email: userInfo.register.email,
+            password: userInfo.register.password,
           }
-        });
+        );
+        alert('회원가입 성공!');
+        localStorage.setItem('id', response.data._id);
+        navigate('/todo');
+      } catch (e) {
+        alert('회원가입 실패');
+      }
     } else if (type === 'login') {
-      await login(userInfo.login.email, userInfo.login.password)
-        .then(res => {
-          localStorage.setItem('uid', res.user.uid);
-          alert(`어서오세요 ${res.user.email}님`);
-          navigate('/todo');
-        })
-        .catch(err => {
-          switch (err.code) {
-            case 'auth/user-not-found':
-              return alert('회원 정보가 존재하지 않습니다.');
-            case 'auth/wrong-password':
-              return alert('비밀번호가 틀렸습니다.');
-            case 'auth/invalid-email':
-              return alert('유효하지 않은 이메일입니다.');
-            default:
-              return alert('로그인 실패');
+      try {
+        const response = await axios.post(
+          'http://localhost:4000/api/auth/login',
+          {
+            email: userInfo.login.email,
+            password: userInfo.login.password,
           }
-        });
+        );
+        alert(`어서오세요! ${response.data.email}님`);
+        localStorage.setItem('id', response.data._id);
+      } catch (e) {
+        alert('로그인 실패');
+      }
     }
   };
 
