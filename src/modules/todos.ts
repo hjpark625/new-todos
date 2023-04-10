@@ -6,13 +6,7 @@ export const changeInput = createAction<string>(CHANGE_INPUT);
 
 const initialState = {
   input: '',
-  todos: [
-    {
-      id: 1,
-      text: '',
-      isCompleted: false,
-    },
-  ],
+  todos: [],
 };
 
 const todos = createReducer(initialState, builder => {
