@@ -12,7 +12,6 @@ function TodoTemplate({ children }: ChildrenProps) {
 
   const onLogout = async () => {
     await axios.post('http://localhost:4000/api/auth/logout');
-    localStorage.removeItem('id');
     localStorage.removeItem('access_token');
     alert('로그아웃 완료되었습니다.');
     navigate('/');

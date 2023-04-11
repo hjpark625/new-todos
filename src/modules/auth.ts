@@ -6,7 +6,7 @@ import { finishLoading, startLoading } from './loading';
 import type { AxiosResponse } from 'axios';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { AuthType } from '../components/types/Auth.type';
-import type { AuthResponseType } from '../api/auth';
+import type { AuthResponseType } from '../api/auth/authAPI.type';
 import type { AuthErrorType } from '../api/auth/authAPI.type';
 
 const CHANGE_FIELD = 'auth/CHANGE_FIELD';
