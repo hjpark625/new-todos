@@ -15,6 +15,10 @@ export const register = async ({ email, password }: { email: string; password: s
   return data;
 };
 
+export const logout = async () => {
+  await api.post('/auth/logout');
+};
+
 export const check = async () => {
   const { data } = await api.get<AxiosResponse<CheckResponseType>>('/auth/check');
   return data;

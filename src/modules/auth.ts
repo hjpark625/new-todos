@@ -21,6 +21,10 @@ const LOGIN = 'auth/LOGIN';
 const LOGIN_SUCCESS = 'auth/LOGIN_SUCCESS';
 const LOGIN_FAILURE = 'auth/LOGIN_FAILURE';
 
+const LOGOUT = 'auth/LOGOUT';
+const LOGOUT_SUCCESS = 'auth/LOGOUT_SUCCESS';
+const LOGOUT_FAILURE = 'auth/LOGOUT_FAILURE';
+
 export const changeField = createAction<{
   form: keyof AuthType;
   key: string;
@@ -34,6 +38,9 @@ export const registerFailure = createAction<AuthErrorType>(REGISTER_FAILURE);
 export const login = createAction<{ email: string; password: string }>(LOGIN);
 export const loginSuccess = createAction<AuthResponseType>(LOGIN_SUCCESS);
 export const loginFailure = createAction<AuthErrorType>(LOGIN_FAILURE);
+export const logout = createAction(LOGOUT);
+export const logoutSuccess = createAction(LOGOUT_SUCCESS);
+export const logoutFailure = createAction(LOGOUT_FAILURE);
 
 function* registerSaga(
   action: PayloadAction<{ email: string; password: string }>
@@ -76,9 +83,27 @@ function* loginSaga(
   }
 }
 
+function* logoutSaga() {
+  yield put(startLoading(LOGOUT));
+  try {
+    yield call(authAPI.logout);
+    localStorage.removeItem('access_token');
+    yield put(logoutSuccess());
+  } catch (e: unknown) {
+    if (isAxiosError<AuthErrorType>(e)) {
+      const data = e.response?.data || { message: '알 수 없는 에러가 발생했습니다.' };
+      alert(data.message);
+      yield put(logoutFailure());
+    }
+  } finally {
+    yield put(finishLoading(LOGOUT));
+  }
+}
+
 export function* authSaga() {
   yield takeLatest(REGISTER, registerSaga);
   yield takeLatest(LOGIN, loginSaga);
+  yield takeLatest(LOGOUT, logoutSaga);
 }
 
 const initialState = {

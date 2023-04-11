@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../modules/auth';
 import * as S from './styles/TodoTemplate.styled';
+import type { AppDispatch } from '../../modules';
 
 interface ChildrenProps {
   children: React.ReactNode;
@@ -9,12 +11,12 @@ interface ChildrenProps {
 
 function TodoTemplate({ children }: ChildrenProps) {
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
 
-  const onLogout = async () => {
-    await axios.post('http://localhost:4000/api/auth/logout');
-    localStorage.removeItem('access_token');
-    alert('로그아웃 완료되었습니다.');
-    navigate('/');
+  const onLogout = () => {
+    dispatch(logout());
+    alert('로그아웃 되었습니다.');
+    return navigate('/');
   };
 
   return (
