@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
-import { changeField } from '../../modules/auth';
+import { changeField, login } from '../../modules/auth';
 import { setAuthType } from '../../modules/auth';
 import * as S from './styles/AuthForm.styled';
 import type { AppDispatch, RootState } from '../../modules';
@@ -58,23 +58,29 @@ const AuthForm = ({ type }: AuthFormProps) => {
       }
     } else if (type === 'login') {
       try {
-        const response = await axios.post(
-          'http://localhost:4000/api/auth/login',
-          {
-            email: userInfo.login.email,
-            password: userInfo.login.password,
-          },
-          {
-            withCredentials: true,
-          }
-        );
-        alert(`어서오세요! ${response.data.user.info.username}님`);
-        localStorage.setItem('id', response.data.user.info._id);
-        localStorage.setItem('access_token', response.data.user.access_token);
-        navigate('/todo');
+        const response = dispatch(login(userInfo.login));
+        console.log(response);
       } catch (e) {
-        alert('로그인 실패');
+        console.log(e);
       }
+      // try {
+      //   const response = await axios.post(
+      //     'http://localhost:4000/api/auth/login',
+      //     {
+      //       email: userInfo.login.email,
+      //       password: userInfo.login.password,
+      //     },
+      //     {
+      //       withCredentials: true,
+      //     }
+      //   );
+      //   alert(`어서오세요! ${response.data.user.info.username}님`);
+      //   localStorage.setItem('id', response.data.user.info._id);
+      //   localStorage.setItem('access_token', response.data.user.access_token);
+      //   navigate('/todo');
+      // } catch (e) {
+      //   alert('로그인 실패');
+      // }
     }
   };
 
@@ -94,7 +100,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
     <S.AuthFormWrapper>
       <h3>{text}</h3>
       <form
-        onSubmit={e => {
+        onSubmit={(e) => {
           handleSubmit(e);
         }}
       >
