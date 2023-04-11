@@ -1,9 +1,13 @@
 import { createAction, createReducer } from '@reduxjs/toolkit';
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { CallEffect, PutEffect, call, put, takeLatest } from 'redux-saga/effects';
+import { isAxiosError } from 'axios';
 import * as authAPI from '../api/auth';
+import { finishLoading, startLoading } from './loading';
+import type { AxiosResponse } from 'axios';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { AuthType } from '../components/types/Auth.type';
-import { finishLoading, startLoading } from './loading';
+import type { AuthResponseType } from '../api/auth';
+import type { AuthErrorType } from '../api/auth/authAPI.type';
 
 const CHANGE_FIELD = 'auth/CHANGE_FIELD';
 const SET_AUTHTYPE = 'auth/SET_AUTHTYPE';
@@ -24,42 +28,51 @@ export const changeField = createAction<{
 }>(CHANGE_FIELD);
 export const setAuthType = createAction<string>(SET_AUTHTYPE);
 export const initializeForm = createAction<string>(INITIALIZE_FORM);
-export const register = createAction<{ email: string; password: string }>(
-  REGISTER
-);
-export const registerSuccess = createAction(REGISTER_SUCCESS);
-export const registerFailure = createAction<{ error: string }>(
-  REGISTER_FAILURE
-);
+export const register = createAction<{ email: string; password: string }>(REGISTER);
+export const registerSuccess = createAction<AuthResponseType>(REGISTER_SUCCESS);
+export const registerFailure = createAction<AuthErrorType>(REGISTER_FAILURE);
 export const login = createAction<{ email: string; password: string }>(LOGIN);
-export const loginSuccess = createAction(LOGIN_SUCCESS);
-export const loginFailure = createAction<{ error: string }>(LOGIN_FAILURE);
+export const loginSuccess = createAction<AuthResponseType>(LOGIN_SUCCESS);
+export const loginFailure = createAction<AuthErrorType>(LOGIN_FAILURE);
 
 function* registerSaga(
   action: PayloadAction<{ email: string; password: string }>
-) {
-  startLoading(REGISTER);
+):
+  | Generator<CallEffect<AxiosResponse<AuthResponseType, any>>>
+  | PutEffect<{ payload: undefined; type: 'auth/LOGIN_SUCCESS' }> {
+  yield put(startLoading(REGISTER));
   try {
-    yield call(authAPI.register, action.payload);
-    yield put(registerSuccess());
-  } catch (e: any) {
-    yield put(registerFailure(e));
+    const res = yield call(authAPI.register, action.payload);
+    yield put(registerSuccess(res));
+  } catch (e: unknown) {
+    if (isAxiosError<AuthErrorType>(e)) {
+      const data = e.response?.data || { message: '알 수 없는 에러가 발생했습니다.' };
+      yield alert(data.message);
+      yield put(registerFailure(data));
+    }
   } finally {
-    finishLoading(REGISTER);
+    yield put(finishLoading(REGISTER));
   }
 }
 function* loginSaga(
   action: PayloadAction<{ email: string; password: string }>
-) {
-  startLoading(LOGIN);
+):
+  | Generator<CallEffect<AxiosResponse<AuthResponseType, any>>>
+  | PutEffect<{ payload: undefined; type: 'auth/LOGIN_SUCCESS' }> {
+  yield put(startLoading(LOGIN));
   try {
-    console.log(action.payload);
-    yield call(authAPI.login, action.payload);
-    yield put(loginSuccess());
-  } catch (e: any) {
-    yield put(loginFailure(e));
+    const res = yield call(authAPI.login, action.payload);
+    localStorage.setItem('access_token', res.user.access_token);
+    alert(`어서오세요 ${res.user.info.username}님!`);
+    yield put(loginSuccess(res));
+  } catch (e: unknown) {
+    if (isAxiosError<AuthErrorType>(e)) {
+      const data = e.response?.data || { message: '알 수 없는 에러가 발생했습니다.' };
+      alert(data.message);
+      yield put(loginFailure(data));
+    }
   } finally {
-    finishLoading(LOGIN);
+    yield put(finishLoading(LOGIN));
   }
 }
 
@@ -78,9 +91,16 @@ const initialState = {
     email: '',
     password: '',
   },
+  userInfo: {
+    _id: '',
+    email: '',
+    username: '',
+  },
+  status: 'idle',
+  error: '',
 };
 
-const auth = createReducer(initialState, (builder) => {
+const auth = createReducer(initialState, builder => {
   builder
     .addCase(changeField, (state, { payload }) => ({
       ...state,
@@ -93,15 +113,37 @@ const auth = createReducer(initialState, (builder) => {
       ...state,
       authType: payload,
     }))
-    .addCase(register, (state) => ({
+    .addCase(register, state => ({ ...state, status: 'pending' }))
+    .addCase(registerSuccess, (state, { payload }) => ({
       ...state,
+      status: 'success',
+      userInfo: {
+        _id: payload.user.info._id,
+        email: payload.user.info.email,
+        username: payload.user.info.username,
+      },
     }))
-    .addCase(registerSuccess, (state) => state)
-    .addCase(registerFailure, (state) => state)
-    // .addCase(login, (state) => state)
-    .addCase(loginSuccess, (state) => state)
-    .addCase(loginFailure, (state) => state)
-    .addDefaultCase((state) => state);
+    .addCase(registerFailure, (state, { payload }) => ({
+      ...state,
+      status: 'rejected',
+      error: payload.message,
+    }))
+    .addCase(login, state => ({ ...state, status: 'pending' }))
+    .addCase(loginSuccess, (state, { payload }) => ({
+      ...state,
+      status: 'success',
+      userInfo: {
+        _id: payload.user.info._id,
+        email: payload.user.info.email,
+        username: payload.user.info.username,
+      },
+    }))
+    .addCase(loginFailure, (state, { payload }) => ({
+      ...state,
+      status: 'rejected',
+      error: payload.message,
+    }))
+    .addDefaultCase(state => state);
 });
 
 export default auth;

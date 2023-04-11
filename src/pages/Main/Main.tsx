@@ -20,15 +20,7 @@ function Main() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return (
-    <div>
-      {authType === 'login' ? (
-        <Login />
-      ) : (
-        authType === 'register' && <Register />
-      )}
-    </div>
-  );
+  return <div>{authType === 'login' ? <Login /> : authType === 'register' && <Register />}</div>;
 }
 
 export default Main;

@@ -8,7 +8,7 @@ export const finishLoading = createAction<string>(FINISH_LOADING);
 
 const initialState = {};
 
-const loading = createReducer(initialState, (builder) => {
+const loading = createReducer(initialState, builder => {
   builder
     .addCase(startLoading, (state, { payload }) => ({
       ...state,
@@ -18,7 +18,7 @@ const loading = createReducer(initialState, (builder) => {
       ...state,
       [payload]: false,
     }))
-    .addDefaultCase((state) => state);
+    .addDefaultCase(state => state);
 });
 
 export default loading;

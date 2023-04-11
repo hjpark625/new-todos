@@ -1,25 +1,45 @@
 import api from '..';
+import type { AxiosError, AxiosResponse } from 'axios';
+import { AuthErrorType } from './authAPI.type';
 
-export const login = async ({
-  email,
-  password,
-}: {
+export interface AuthResponseType {
+  user: {
+    access_token: string;
+    info: {
+      __v: number;
+      _id: string;
+      email: string;
+      registeredAt: Date;
+      username: string;
+    };
+  };
+}
+export interface CheckResponseType {
+  _id: string;
   email: string;
-  password: string;
-}) => {
-  await api.post('/auth/login', { email, password });
+}
+
+// api.interceptors.response.use(
+//   response => response,
+//   (error: AxiosError<AuthErrorType>) => {
+//     return alert(error.response?.data.message);
+//   }
+// );
+
+export const login = async ({ email, password }: { email: string; password: string }) => {
+  const { data } = await api.post<AxiosResponse<AuthResponseType>>('/auth/login', { email, password });
+  return data;
 };
 
-export const register = async ({
-  email,
-  password,
-}: {
-  email: string;
-  password: string;
-}) => {
-  await api.post('/auth/register', { email, password });
+export const register = async ({ email, password }: { email: string; password: string }) => {
+  const { data } = await api.post<AxiosResponse<AuthResponseType>>('/auth/register', {
+    email,
+    password,
+  });
+  return data;
 };
 
 export const check = async () => {
-  await api.get('/auth/check');
+  const { data } = await api.get<AxiosResponse<CheckResponseType>>('/auth/check');
+  return data;
 };

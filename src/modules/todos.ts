@@ -9,7 +9,7 @@ const initialState = {
   todos: [],
 };
 
-const todos = createReducer(initialState, (builder) => {
+const todos = createReducer(initialState, builder => {
   builder.addCase(changeInput, (state, action) => ({
     ...state,
     input: action.payload,

@@ -64,11 +64,7 @@ function TodoListItem({ items }: TodoListItemProps) {
           getDoneTodo();
         }}
       >
-        {isCompleted ? (
-          <FontAwesomeIcon icon={faSquareCheck} />
-        ) : (
-          <FontAwesomeIcon icon={faSquare} />
-        )}
+        {isCompleted ? <FontAwesomeIcon icon={faSquareCheck} /> : <FontAwesomeIcon icon={faSquare} />}
         {isEdit || <S.Text isCompleted={isCompleted}>{text}</S.Text>}
       </S.CheckBox>
       {isEdit && (
