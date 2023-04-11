@@ -100,7 +100,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
     <S.AuthFormWrapper>
       <h3>{text}</h3>
       <form
-        onSubmit={(e) => {
+        onSubmit={e => {
           handleSubmit(e);
         }}
       >
