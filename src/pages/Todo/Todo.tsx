@@ -1,15 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { useSelector } from 'react-redux';
 import TodoTemplate from '../../components/Todos/TodoTemplate';
 import TodoInsert from '../../components/Todos/TodoInsert';
 import TodoList from '../../components/Todos/TodoList';
-import type { TodoItem } from '../../components/types/Todo.type';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../modules';
+import { getTodos } from '../../modules/todos';
+import { useAppDispatch } from '../../modules';
+import type { RootState } from '../../modules';
 
 function Todo() {
-  // const [todos, setTodos] = useState<TodoItem[] | null>(null);
+  const dispatch = useAppDispatch();
   const todos = useSelector((state: RootState) => state.todos.todos);
 
   const navigate = useNavigate();
@@ -21,17 +21,11 @@ function Todo() {
   };
 
   const getDatas = async () => {
-    // try {
-    //   const response = await axios.get('http://localhost:4000/api/todos', {
-    //     withCredentials: true,
-    //   });
-    //   const { data } = response;
-    //   setTodos(data);
-    //   return;
-    // } catch (e) {
-    //   alert('데이터를 불러오는데 실패했습니다.');
-    //   return console.log(e);
-    // }
+    try {
+      return dispatch(getTodos());
+    } catch (e) {
+      return e;
+    }
   };
 
   useEffect(() => {

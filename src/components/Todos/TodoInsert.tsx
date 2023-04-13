@@ -1,9 +1,8 @@
-import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useAppDispatch } from '../../modules/index';
-import { changeInput } from '../../modules/todos';
+import { changeInput, createTodo } from '../../modules/todos';
 import * as S from './styles/TodoInsert.styled';
 import type { RootState } from '../../modules/index';
 
@@ -20,17 +19,9 @@ function TodoInsert() {
     try {
       e.preventDefault();
       if (todoValue.length === 0) return alert('내용을 입력해주세요');
-      await axios.post(
-        'http://localhost:4000/api/todos',
-        {
-          text: todoValue,
-          isCompleted: false,
-          createdAt: new Date(),
-        },
-        { withCredentials: true }
-      );
+      dispatch(createTodo({ text: todoValue, isCompleted: false, createdAt: new Date().toISOString() }));
     } catch (err) {
-      alert(`작성에 실패하였습니다.. ${err}`);
+      return err;
     } finally {
       dispatch(changeInput(''));
     }

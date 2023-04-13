@@ -8,7 +8,7 @@ export const createTodo = async ({
   isCompleted,
 }: {
   text: string;
-  createdAt: Date;
+  createdAt: string;
   isCompleted: boolean;
 }) => {
   const { data } = await api.post<AxiosResponse<TodoCreateResponseType>>('/todos', { text, createdAt, isCompleted });

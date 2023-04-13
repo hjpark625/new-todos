@@ -1,15 +1,11 @@
-export interface TodoItem {
-  _id: string;
-  text: string;
-  createdAt: Date;
-  isCompleted: boolean;
-}
+import type { TodoGetResponseType } from '../../api/todo/todoAPI.type';
+
 export interface TodoListProps {
-  todos: TodoItem[] | null;
+  todos: TodoGetResponseType[] | null;
 }
 
 export interface TodoListItemProps {
-  items: TodoItem;
+  items: TodoGetResponseType;
 }
 
 export interface StyleProps {

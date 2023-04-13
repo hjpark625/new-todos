@@ -8,6 +8,7 @@ import type { TodoCreateResponseType, TodoErrorType, TodoGetResponseType } from 
 import type { AxiosResponse } from 'axios';
 
 const CHANGE_INPUT = 'todo/CHANGE_INPUT';
+const CHANGE_EDIT_INPUT = 'todo/CHANGE_EDIT_INPUT';
 
 const GET_TODOS = 'todo/GET_TODOS';
 const GET_TODOS_SUCCESS = 'todo/GET_TODOS_SUCCESS';
@@ -27,12 +28,13 @@ const DELETE_TODO_SUCCESS = 'todo/DELETE_TODO_SUCCESS';
 const DELETE_TODO_FAILURE = 'todo/DELETE_TODO_FAILURE';
 
 export const changeInput = createAction<string>(CHANGE_INPUT);
+export const changeEditInput = createAction<string>(CHANGE_EDIT_INPUT);
 
 export const getTodos = createAction(GET_TODOS);
 export const getTodosSuccess = createAction<TodoGetResponseType[]>(GET_TODOS_SUCCESS);
 export const getTodosFailure = createAction<TodoErrorType>(GET_TODOS_FAILURE);
 
-export const createTodo = createAction<{ text: string; createdAt: Date; isCompleted: boolean }>(CREATE_TODO);
+export const createTodo = createAction<{ text: string; createdAt: string; isCompleted: boolean }>(CREATE_TODO);
 export const createTodoSuccess = createAction<TodoCreateResponseType>(CREATE_TODO_SUCCESS);
 export const createTodoFailure = createAction<TodoErrorType>(CREATE_TODO_FAILURE);
 
@@ -45,9 +47,7 @@ export const deleteTodo = createAction<{ _id: string }>(DELETE_TODO);
 export const deleteTodoSuccess = createAction(DELETE_TODO_SUCCESS);
 export const deleteTodoFailure = createAction<TodoErrorType>(DELETE_TODO_FAILURE);
 
-function* getTodosSaga(
-  action: ReturnType<typeof getTodos>
-): Generator<CallEffect<AxiosResponse<TodoGetResponseType[]>>> | PutEffect {
+function* getTodosSaga(): Generator<CallEffect<AxiosResponse<TodoGetResponseType[]>>> | PutEffect {
   yield put(startLoading(GET_TODOS));
   try {
     const res = yield call(todoAPI.getTodos);
@@ -70,6 +70,7 @@ function* createSaga(
   try {
     const res = yield call(todoAPI.createTodo, action.payload);
     yield put(createTodoSuccess(res));
+    yield put(getTodos());
   } catch (e) {
     if (isAxiosError<TodoErrorType>(e)) {
       const data = e.response?.data || { message: '알 수 없는 에러가 발생했습니다.' };
@@ -86,6 +87,7 @@ function* updateCheckSaga(action: ReturnType<typeof updateCheckTodo>) {
   try {
     yield call(todoAPI.updateCheckTodo, action.payload);
     yield put(updateTodoSuccess());
+    yield put(getTodos());
   } catch (e) {
     if (isAxiosError<TodoErrorType>(e)) {
       const data = e.response?.data || { message: '알 수 없는 에러가 발생했습니다.' };
@@ -102,6 +104,7 @@ function* updateTextSaga(action: ReturnType<typeof updateTextTodo>) {
   try {
     yield call(todoAPI.updateTextTodo, action.payload);
     yield put(updateTodoSuccess());
+    yield put(getTodos());
   } catch (e) {
     if (isAxiosError<TodoErrorType>(e)) {
       const data = e.response?.data || { message: '알 수 없는 에러가 발생했습니다.' };
@@ -118,6 +121,7 @@ function* deleteSaga(action: ReturnType<typeof deleteTodo>) {
   try {
     yield call(todoAPI.deleteTodo, action.payload);
     yield put(deleteTodoSuccess());
+    yield put(getTodos());
   } catch (e) {
     if (isAxiosError<TodoErrorType>(e)) {
       const data = e.response?.data || { message: '알 수 없는 에러가 발생했습니다.' };
@@ -139,11 +143,13 @@ export function* todoSaga() {
 
 const initialState: {
   input: string;
+  editInput: string;
   todos: TodoGetResponseType[];
   status: 'pending' | 'success' | 'rejected' | 'idle';
   error: string;
 } = {
   input: '',
+  editInput: '',
   todos: [],
   status: 'idle',
   error: '',
@@ -155,11 +161,15 @@ const todos = createReducer(initialState, builder => {
       ...state,
       input: action.payload,
     }))
+    .addCase(changeEditInput, (state, action) => ({
+      ...state,
+      editInput: action.payload,
+    }))
     .addCase(getTodos, state => ({ ...state, status: 'pending' }))
     .addCase(getTodosSuccess, (state, action) => ({
       ...state,
       status: 'success',
-      todos: state.todos.concat(action.payload),
+      todos: action.payload,
     }))
     .addCase(getTodosFailure, (state, action) => ({
       ...state,

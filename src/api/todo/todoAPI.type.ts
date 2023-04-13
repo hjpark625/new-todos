@@ -1,7 +1,7 @@
 export interface TodoCreateResponseType {
   text: string;
   isCompleted: boolean;
-  createdAt: Date;
+  createdAt: string;
   user: {
     _id: string;
     email: string;
