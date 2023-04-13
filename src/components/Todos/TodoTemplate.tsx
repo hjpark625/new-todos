@@ -1,9 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from '../../modules';
 import { logout } from '../../modules/auth';
 import * as S from './styles/TodoTemplate.styled';
-import type { AppDispatch } from '../../modules';
 
 interface ChildrenProps {
   children: React.ReactNode;
@@ -11,7 +10,7 @@ interface ChildrenProps {
 
 function TodoTemplate({ children }: ChildrenProps) {
   const navigate = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
 
   const onLogout = () => {
     dispatch(logout());

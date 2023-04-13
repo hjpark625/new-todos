@@ -1,13 +1,14 @@
-import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { useAppDispatch } from '../../modules/index';
 import { changeInput } from '../../modules/todos';
 import * as S from './styles/TodoInsert.styled';
-import type { RootState, AppDispatch } from '../../modules/index';
+import type { RootState } from '../../modules/index';
 
 function TodoInsert() {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const todoValue = useSelector((state: RootState) => state.todos.input);
 
   const getInputValue = (e: React.ChangeEvent<HTMLInputElement>) => {

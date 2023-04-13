@@ -1,10 +1,11 @@
 import React, { useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { changeField, login, register } from '../../modules/auth';
 import { setAuthType } from '../../modules/auth';
+import { useAppDispatch } from '../../modules';
 import * as S from './styles/AuthForm.styled';
-import type { AppDispatch, RootState } from '../../modules';
+import type { RootState } from '../../modules';
 import type { AuthType } from '../types/Auth.type';
 import type { AuthFormProps } from '../types/Auth.type';
 
@@ -14,7 +15,7 @@ const textMap: AuthType = {
 };
 
 const AuthForm = ({ type }: AuthFormProps) => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const userStore = useSelector((state: RootState) => state.auth);
