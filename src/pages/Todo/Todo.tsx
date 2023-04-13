@@ -1,39 +1,31 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import TodoTemplate from '../../components/Todos/TodoTemplate';
 import TodoInsert from '../../components/Todos/TodoInsert';
 import TodoList from '../../components/Todos/TodoList';
-import { query, collection, where, onSnapshot } from 'firebase/firestore';
-import { db } from '../../firebase';
-import type { TodoItem } from '../../components/types/Todo.type';
+import { getTodos } from '../../modules/todos';
+import { useAppDispatch } from '../../modules';
+import type { RootState } from '../../modules';
 
 function Todo() {
-  const [todos, setTodos] = useState<TodoItem[] | null>(null);
+  const dispatch = useAppDispatch();
+  const todos = useSelector((state: RootState) => state.todos.todos);
 
   const navigate = useNavigate();
 
-  const token = localStorage.getItem('uid');
+  const token = localStorage.getItem('access_token');
 
   const checkToken = () => {
     !token && navigate('/');
   };
 
   const getDatas = async () => {
-    const q = query(collection(db, 'todos'), where('uid', '==', `${token}`));
-
-    onSnapshot(q, querySnapshot => {
-      const datas: TodoItem[] = [];
-      querySnapshot.forEach(document => {
-        const results = document.data() as TodoItem;
-        datas.push({ ...results, id: document.id });
-        datas.sort((a, b) => a.createdAt.seconds - b.createdAt.seconds);
-      });
-      if (datas.every(user => user.uid === `${token}`)) {
-        setTodos(datas);
-      } else {
-        setTodos(null);
-      }
-    });
+    try {
+      return dispatch(getTodos());
+    } catch (e) {
+      return e;
+    }
   };
 
   useEffect(() => {

@@ -1,51 +1,73 @@
 import React, { useState, useRef, useLayoutEffect } from 'react';
-import { doc, deleteDoc, updateDoc } from 'firebase/firestore';
-import { db } from '../../firebase';
+import { useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquare, faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { faPen, faSquareCheck } from '@fortawesome/free-solid-svg-icons';
 import * as S from './styles/TodoListItem.styled';
+import { useAppDispatch } from '../../modules';
+import { changeEditInput, updateCheckTodo, updateTextTodo, deleteTodo } from '../../modules/todos';
+import type { RootState } from '../../modules';
 import type { TodoListItemProps } from '../types/Todo.type';
 
 function TodoListItem({ items }: TodoListItemProps) {
-  const { text, isCompleted, id } = items;
+  const dispatch = useAppDispatch();
+  const { text, isCompleted, _id } = items;
   const [isEdit, setIsEdit] = useState(false);
-  const [editTodo, setEditTodo] = useState(text);
+
+  const editTodo = useSelector((state: RootState) => state.todos.editInput);
 
   const editRef = useRef<HTMLInputElement | null>(null);
   useLayoutEffect(() => {
     editRef.current !== null && editRef.current.focus();
   });
 
-  const getDoneTodo = async () => {
-    const doneRef = doc(db, 'todos', `${id}`);
-    await updateDoc(doneRef, {
-      isCompleted: !isCompleted,
-    }).catch(err => {
-      alert('오류가 발생했습니다.');
-      console.error(err);
-    });
+  const getDoneTodo = () => {
+    try {
+      dispatch(updateCheckTodo({ _id, isCompleted: !isCompleted }));
+    } catch (e) {
+      return e;
+    }
   };
 
-  const deleteTodo = async () => {
-    const deleteRef = doc(db, 'todos', `${id}`);
-    await deleteDoc(deleteRef);
+  const onDeleteTodo = () => {
+    try {
+      dispatch(deleteTodo({ _id }));
+    } catch (e) {
+      return e;
+    }
   };
 
   const saveEditTodoText = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEditTodo(e.target.value);
+    dispatch(changeEditInput(e.target.value));
   };
 
   const editSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const editRef = doc(db, 'todos', `${id}`);
-    await updateDoc(editRef, {
-      text: editTodo,
-    }).catch(err => {
-      alert(`수정에 실패하였습니다. ${err}`);
-    });
+    try {
+      dispatch(updateTextTodo({ _id, text: editTodo }));
+    } catch (e) {
+      return e;
+    } finally {
+      dispatch(changeEditInput(''));
+    }
     setIsEdit(false);
   };
+
+  // TODO: 클릭 이벤트 발생 시, isEdit 상태를 false로 변경하는 기능 구현
+  // useEffect(() => {
+  //   const handleClickOutside = (e: MouseEvent) => {
+  //     console.log(editRef.current);
+  //     console.log(editRef.current?.contains(e.target as Node));
+  //     console.log(e.target);
+  //     if (editRef.current && editRef.current.contains(e.target as Node)) {
+  //       setIsEdit(false);
+  //     }
+  //   };
+  //   window.addEventListener('click', handleClickOutside);
+  //   return () => {
+  //     window.removeEventListener('click', handleClickOutside);
+  //   };
+  // }, [editRef, isEdit]);
 
   return (
     <S.TodoListItemWrapper>
@@ -55,11 +77,7 @@ function TodoListItem({ items }: TodoListItemProps) {
           getDoneTodo();
         }}
       >
-        {isCompleted ? (
-          <FontAwesomeIcon icon={faSquareCheck} />
-        ) : (
-          <FontAwesomeIcon icon={faSquare} />
-        )}
+        {isCompleted ? <FontAwesomeIcon icon={faSquareCheck} /> : <FontAwesomeIcon icon={faSquare} />}
         {isEdit || <S.Text isCompleted={isCompleted}>{text}</S.Text>}
       </S.CheckBox>
       {isEdit && (
@@ -72,6 +90,7 @@ function TodoListItem({ items }: TodoListItemProps) {
             type="text"
             value={editTodo}
             ref={editRef}
+            placeholder={text}
             onChange={e => {
               saveEditTodoText(e);
             }}
@@ -88,7 +107,7 @@ function TodoListItem({ items }: TodoListItemProps) {
       </S.Edit>
       <S.Remove
         onClick={() => {
-          deleteTodo();
+          onDeleteTodo();
         }}
       >
         <FontAwesomeIcon icon={faTrashCan} />
