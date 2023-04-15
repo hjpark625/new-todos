@@ -88,6 +88,7 @@ function* logoutSaga() {
   try {
     yield call(authAPI.logout);
     localStorage.removeItem('access_token');
+    alert('로그아웃 완료');
     yield put(logoutSuccess());
   } catch (e: unknown) {
     if (isAxiosError<AuthErrorType>(e)) {

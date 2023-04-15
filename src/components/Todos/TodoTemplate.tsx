@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../modules';
 import { logout } from '../../modules/auth';
@@ -14,8 +14,7 @@ function TodoTemplate({ children }: ChildrenProps) {
 
   const onLogout = () => {
     dispatch(logout());
-    alert('로그아웃 되었습니다.');
-    return navigate('/');
+    navigate('/', { replace: true });
   };
 
   return (
