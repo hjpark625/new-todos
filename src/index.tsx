@@ -4,9 +4,7 @@ import Router from './Router';
 import store from './modules';
 import GlobalStyle from './styles/GlobalStyle';
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <Provider store={store}>
     <GlobalStyle />

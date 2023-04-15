@@ -32,8 +32,7 @@ export const Text = styled.div<StyleProps>`
   flex: 1;
 
   color: ${({ isCompleted }) => (!isCompleted ? 'inherit' : '#adb5bd')};
-  text-decoration: ${({ isCompleted }) =>
-    !isCompleted ? 'none' : 'line-through'};
+  text-decoration: ${({ isCompleted }) => (!isCompleted ? 'none' : 'line-through')};
 `;
 
 export const Remove = styled.div`
