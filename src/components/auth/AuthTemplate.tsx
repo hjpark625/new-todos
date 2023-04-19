@@ -1,7 +1,7 @@
 import React from 'react';
 import * as S from './styles/AuthTemplate.styled';
 
-function AuthTemplate({ children }: { children: React.ReactElement }) {
+function AuthTemplate({ children }: { children: React.ReactNode }) {
   return (
     <S.AuthTemplateWrapper>
       <S.WhiteBox>
