@@ -15,7 +15,7 @@ const store = configureStore({
   middleware: getDefaultMiddleware => getDefaultMiddleware().concat(sagaMiddleware),
 });
 
-export function* rootSaga() {
+function* rootSaga() {
   yield all([authSaga(), todoSaga()]);
 }
 

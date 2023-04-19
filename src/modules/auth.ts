@@ -61,6 +61,7 @@ function* registerSaga(
     yield put(finishLoading(REGISTER));
   }
 }
+
 function* loginSaga(
   action: PayloadAction<{ email: string; password: string }>
 ):
