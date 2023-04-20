@@ -27,7 +27,7 @@
 
 <br/>
 
-> http://new-todos.vercel.app/
+> https://hjpark625.github.io/new-todos/
 
 <br/>
 
