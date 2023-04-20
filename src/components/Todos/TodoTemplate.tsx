@@ -19,8 +19,7 @@ function TodoTemplate({ children }: ChildrenProps) {
         alert('로그아웃 완료되었습니다.');
         navigate('/');
       })
-      .catch(err => {
-        console.error(err);
+      .catch(() => {
         alert('다시 시도해 주십시오');
       });
   };
