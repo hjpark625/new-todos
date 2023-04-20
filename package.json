@@ -2,6 +2,7 @@
   "name": "new-todos",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://hjpark625.github.io/new-todos/",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.2.0",
     "@fortawesome/free-brands-svg-icons": "^6.2.0",
@@ -56,6 +57,5 @@
     "prettier": "^2.7.1",
     "redux-devtools-extension": "^2.13.9",
     "typescript": "^4.8.3"
-  },
-  "homepage": "https://hjpark625.github.io/new-todos/"
+  }
 }
