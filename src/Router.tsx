@@ -6,7 +6,7 @@ const Todo = lazy(() => import('./pages/Todo/Todo'));
 
 function Router() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/new-todos">
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="/todo" element={<Todo />} />
