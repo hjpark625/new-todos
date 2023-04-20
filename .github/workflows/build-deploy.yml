@@ -27,8 +27,6 @@ jobs:
 
       - name: Start Build
         run: yarn build
-        with:
-          folder: ./build
 
   deploy:
     needs: build
