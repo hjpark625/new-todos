@@ -21,9 +21,8 @@ function TodoListItem({ items }: TodoListItemProps) {
     const doneRef = doc(db, 'todos', `${id}`);
     await updateDoc(doneRef, {
       isCompleted: !isCompleted,
-    }).catch(err => {
+    }).catch(() => {
       alert('오류가 발생했습니다.');
-      console.error(err);
     });
   };
 
@@ -41,7 +40,7 @@ function TodoListItem({ items }: TodoListItemProps) {
     const editRef = doc(db, 'todos', `${id}`);
     await updateDoc(editRef, {
       text: editTodo,
-    }).catch(err => {
+    }).catch((err) => {
       alert(`수정에 실패하였습니다. ${err}`);
     });
     setIsEdit(false);
@@ -64,7 +63,7 @@ function TodoListItem({ items }: TodoListItemProps) {
       </S.CheckBox>
       {isEdit && (
         <S.EditForm
-          onSubmit={e => {
+          onSubmit={(e) => {
             editSubmit(e);
           }}
         >
@@ -72,7 +71,7 @@ function TodoListItem({ items }: TodoListItemProps) {
             type="text"
             value={editTodo}
             ref={editRef}
-            onChange={e => {
+            onChange={(e) => {
               saveEditTodoText(e);
             }}
           />
@@ -81,7 +80,7 @@ function TodoListItem({ items }: TodoListItemProps) {
       <S.Edit
         isCompleted={isCompleted}
         onClick={() => {
-          setIsEdit(prev => !prev);
+          setIsEdit((prev) => !prev);
         }}
       >
         <FontAwesomeIcon icon={faPen} />
