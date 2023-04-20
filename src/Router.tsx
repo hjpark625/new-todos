@@ -9,7 +9,7 @@ function Router() {
     <BrowserRouter basename={process.env.PUBLIC_URL}>
       <Routes>
         <Route index element={<Main />} />
-        <Route path={`${process.env.PUBLIC_URL}todo`} element={<Todo />} />
+        <Route path={`${process.env.PUBLIC_URL}/todo`} element={<Todo />} />
       </Routes>
     </BrowserRouter>
   );
