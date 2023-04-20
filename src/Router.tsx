@@ -6,9 +6,9 @@ const Todo = lazy(() => import('./pages/Todo/Todo'));
 
 function Router() {
   return (
-    <BrowserRouter basename="/new-todos">
+    <BrowserRouter basename={process.env.PUBLIC_URL}>
       <Routes>
-        <Route path="/" element={<Main />} />
+        <Route index element={<Main />} />
         <Route path="/todo" element={<Todo />} />
       </Routes>
     </BrowserRouter>
