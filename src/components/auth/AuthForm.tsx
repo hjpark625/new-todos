@@ -117,12 +117,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
         <S.SubmitButton
           cyan
           fullWidth
-          disabled={
-            userInfo[type].email.includes('@' && '.com') &&
-            userInfo[type].password.length > 7
-              ? false
-              : true
-          }
+          disabled={userInfo[type].email.includes('@' && '.com') && userInfo[type].password.length > 7 ? false : true}
         >
           {text}
         </S.SubmitButton>

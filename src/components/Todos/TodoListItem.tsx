@@ -40,7 +40,7 @@ function TodoListItem({ items }: TodoListItemProps) {
     const editRef = doc(db, 'todos', `${id}`);
     await updateDoc(editRef, {
       text: editTodo,
-    }).catch((err) => {
+    }).catch(err => {
       alert(`수정에 실패하였습니다. ${err}`);
     });
     setIsEdit(false);
@@ -54,16 +54,12 @@ function TodoListItem({ items }: TodoListItemProps) {
           getDoneTodo();
         }}
       >
-        {isCompleted ? (
-          <FontAwesomeIcon icon={faSquareCheck} />
-        ) : (
-          <FontAwesomeIcon icon={faSquare} />
-        )}
+        {isCompleted ? <FontAwesomeIcon icon={faSquareCheck} /> : <FontAwesomeIcon icon={faSquare} />}
         {isEdit || <S.Text isCompleted={isCompleted}>{text}</S.Text>}
       </S.CheckBox>
       {isEdit && (
         <S.EditForm
-          onSubmit={(e) => {
+          onSubmit={e => {
             editSubmit(e);
           }}
         >
@@ -71,7 +67,7 @@ function TodoListItem({ items }: TodoListItemProps) {
             type="text"
             value={editTodo}
             ref={editRef}
-            onChange={(e) => {
+            onChange={e => {
               saveEditTodoText(e);
             }}
           />
@@ -80,7 +76,7 @@ function TodoListItem({ items }: TodoListItemProps) {
       <S.Edit
         isCompleted={isCompleted}
         onClick={() => {
-          setIsEdit((prev) => !prev);
+          setIsEdit(prev => !prev);
         }}
       >
         <FontAwesomeIcon icon={faPen} />
