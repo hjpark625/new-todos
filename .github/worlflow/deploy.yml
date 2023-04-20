@@ -1,0 +1,37 @@
+name: Deploy Firebase App
+
+on:
+  push:
+    branches:
+      - firebase
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+        
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16.x"
+            
+      - name: Check Node Version
+        run: node --version
+          
+      - name: Check Yarn Version
+        run: yarn --version
+          
+      - name: Install Dependencies
+        run: yarn install
+
+      - name: Start Build
+        run: yarn build
+
+      - name: Deploy to Github Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GH_PERSONAL_TOKEN }}
+          publish_dir: ./build
+          publish_branch: gh-pages
