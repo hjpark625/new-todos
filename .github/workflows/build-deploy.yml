@@ -25,19 +25,24 @@ jobs:
       - name: Install Dependencies
         run: yarn install
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
       - name: Start Build
         run: yarn build
-        
-      - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@4.1.3
         with:
-          ACCESS_TOKEN: ${{ secrets.GH_PERSONAL_TOKEN }}
-          BRANCH: gh-pages
-          FOLDER: ./build
+          folder: ./build
+
+  deploy:
+    needs: build
+
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    steps:        
+      - name: Deploy
+        id: Deployment
+        uses: actions/deploy-pages@v2
