@@ -24,9 +24,6 @@ jobs:
           
       - name: Install Dependencies
         run: yarn install
-          
-      - name: Start Build
-        run: yarn build
 
   deploy:
     needs: build
@@ -34,6 +31,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Start Build
+        run: yarn build
         
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@4.1.3
