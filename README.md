@@ -14,11 +14,29 @@
 
 ## 🌈 실행 방법
 
-    $ git clone https://github.com/hjpark625/new-todos.git
-    $ cd new-todos
-    $ yarn install
-    $ yarn start
+```shell
+# 프론트엔드 프로젝트(node version 16.19.0 사용 중)
+$ git clone https://github.com/hjpark625/new-todos.git
+$ cd new-todos
+$ nvm use v16.19.0
+$ yarn install
+$ yarn start
 
+# 백엔드 프로젝트(서버 / node version 16.19.0 사용 중)
+$ git clone https://github.com/hjpark625/todo-backend.git
+$ cd todo-backend
+$ nvm use v16.19.0
+$ yarn install
+$ yarn start:dev # 개발용 서버 실행(ts-node)
+# 혹은
+$ yarn build
+$ yarn start # 빌드된 서버 실행(node)
+
+# Docker 컨테이너 활용 시
+$ docker login # Docker Hub 로그인(개인 계정 요구)
+$ docker pull meteoearth/server-todo:1.1.2
+$ docker run -p 80:4000 meteoearth/server-todo:1.1.2
+```
 <br />
 
 ---
@@ -28,7 +46,8 @@
 <br/>
 
 > ~~http://new-todos.vercel.app/~~  
-> 자체 개발한 서버 사용으로 인한 배포 중단
+> 자체 개발한 서버 사용으로 인한 배포 중단  
+> firebase를 활용한 배포는 `firebase`브랜치 참고
 
 <br/>
 
@@ -239,15 +258,6 @@
     }
   };
   ```
-
-### Realtime DB에서 FireStore DB로 마이그레이션(23. 2. 11(토))완료
-
-- FireStore는 쿼리 중심의 데이터베이스로 개인적으로 Realtime보다 FireStore 데이터베이스가 인덱싱부터 데이터 관리 측면에 있어 더 효율적이라고 판단되어 마이그레이션을 진행했다.
-  - 메서드 들은 Realtime과 큰 차이는 없으며 중점적으로 변경된 사항은 realtime은 ref라는 메서드를 활용해서 데이터 베이스에 접근했지만 firestore는 컬렉션을 기준으로 접근을 한다는 차이가 있다.
-  - 초기 데이터를 todos데이터를 불러오는데 있어 사용한 메서드는 query와 onSnapshot이라는 메서드로 get을 사용하던 realtime과의 차이가 있다.
-  - 데이터의 추가에 있어서는 realtime은 set, firestore는 addDoc 혹은 setDoc을 사용
-  - 삭제는 realtime에서는 remove, firestore는 deleteDoc
-  - 수정은 realtime에선 update, firestore는 updateDoc으로 활용된다.
 
 ### Firebase에서 자체 개발한 서버로 마이그레이션(23. 4. 16(일))완료
 
