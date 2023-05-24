@@ -20,13 +20,8 @@
     "noEmit": true,
     "verbatimModuleSyntax": true,
     "jsx": "react-jsx",
-    "baseUrl": "./",
-    "paths": {
-      "@/*": [
-        "src/*"
-      ]
-    }
   },
+  "extends": "./tsconfig.paths.json",
   "include": [
     "src"
   ]
