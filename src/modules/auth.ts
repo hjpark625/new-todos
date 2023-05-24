@@ -25,28 +25,29 @@ const LOGOUT = 'auth/LOGOUT';
 const LOGOUT_SUCCESS = 'auth/LOGOUT_SUCCESS';
 const LOGOUT_FAILURE = 'auth/LOGOUT_FAILURE';
 
-export const changeField = createAction<{
-  form: keyof AuthType;
-  key: string;
-  value: string;
-}>(CHANGE_FIELD);
-export const setAuthType = createAction<string>(SET_AUTHTYPE);
-export const initializeForm = createAction<string>(INITIALIZE_FORM);
-export const register = createAction<{ email: string; password: string }>(REGISTER);
-export const registerSuccess = createAction<AuthResponseType>(REGISTER_SUCCESS);
-export const registerFailure = createAction<AuthErrorType>(REGISTER_FAILURE);
-export const login = createAction<{ email: string; password: string }>(LOGIN);
-export const loginSuccess = createAction<AuthResponseType>(LOGIN_SUCCESS);
-export const loginFailure = createAction<AuthErrorType>(LOGIN_FAILURE);
+export const changeField = createAction<
+  {
+    form: keyof AuthType;
+    key: string;
+    value: string;
+  },
+  typeof CHANGE_FIELD
+>(CHANGE_FIELD);
+export const setAuthType = createAction<string, typeof SET_AUTHTYPE>(SET_AUTHTYPE);
+export const initializeForm = createAction<string, typeof INITIALIZE_FORM>(INITIALIZE_FORM);
+export const register = createAction<{ email: string; password: string }, typeof REGISTER>(REGISTER);
+export const registerSuccess = createAction<AuthResponseType, typeof REGISTER_SUCCESS>(REGISTER_SUCCESS);
+export const registerFailure = createAction<AuthErrorType, typeof REGISTER_FAILURE>(REGISTER_FAILURE);
+export const login = createAction<{ email: string; password: string }, typeof LOGIN>(LOGIN);
+export const loginSuccess = createAction<AuthResponseType, typeof LOGIN_SUCCESS>(LOGIN_SUCCESS);
+export const loginFailure = createAction<AuthErrorType, typeof LOGIN_FAILURE>(LOGIN_FAILURE);
 export const logout = createAction(LOGOUT);
 export const logoutSuccess = createAction(LOGOUT_SUCCESS);
 export const logoutFailure = createAction(LOGOUT_FAILURE);
 
 function* registerSaga(
   action: PayloadAction<{ email: string; password: string }>
-):
-  | Generator<CallEffect<AxiosResponse<AuthResponseType, any>>>
-  | PutEffect<{ payload: undefined; type: 'auth/LOGIN_SUCCESS' }> {
+): Generator<CallEffect<AxiosResponse<AuthResponseType, any>>> | PutEffect {
   yield put(startLoading(REGISTER));
   try {
     const res = yield call(authAPI.register, action.payload);
@@ -64,9 +65,7 @@ function* registerSaga(
 
 function* loginSaga(
   action: PayloadAction<{ email: string; password: string }>
-):
-  | Generator<CallEffect<AxiosResponse<AuthResponseType, any>>>
-  | PutEffect<{ payload: undefined; type: 'auth/LOGIN_SUCCESS' }> {
+): Generator<CallEffect<AxiosResponse<AuthResponseType, any>>> | PutEffect {
   yield put(startLoading(LOGIN));
   try {
     const res = yield call(authAPI.login, action.payload);

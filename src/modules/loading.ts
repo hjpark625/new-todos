@@ -3,8 +3,8 @@ import { createAction, createReducer } from '@reduxjs/toolkit';
 const START_LOADING = 'loading/START_LOADING';
 const FINISH_LOADING = 'loading/FINISH_LOADING';
 
-export const startLoading = createAction<string>(START_LOADING);
-export const finishLoading = createAction<string>(FINISH_LOADING);
+export const startLoading = createAction<string, typeof START_LOADING>(START_LOADING);
+export const finishLoading = createAction<string, typeof FINISH_LOADING>(FINISH_LOADING);
 
 const initialState = {};
 

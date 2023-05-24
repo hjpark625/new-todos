@@ -27,25 +27,29 @@ const DELETE_TODO = 'todo/DELETE_TODO';
 const DELETE_TODO_SUCCESS = 'todo/DELETE_TODO_SUCCESS';
 const DELETE_TODO_FAILURE = 'todo/DELETE_TODO_FAILURE';
 
-export const changeInput = createAction<string>(CHANGE_INPUT);
-export const changeEditInput = createAction<string>(CHANGE_EDIT_INPUT);
+export const changeInput = createAction<string, typeof CHANGE_INPUT>(CHANGE_INPUT);
+export const changeEditInput = createAction<string, typeof CHANGE_EDIT_INPUT>(CHANGE_EDIT_INPUT);
 
 export const getTodos = createAction(GET_TODOS);
-export const getTodosSuccess = createAction<TodoGetResponseType[]>(GET_TODOS_SUCCESS);
-export const getTodosFailure = createAction<TodoErrorType>(GET_TODOS_FAILURE);
+export const getTodosSuccess = createAction<TodoGetResponseType[], typeof GET_TODOS_SUCCESS>(GET_TODOS_SUCCESS);
+export const getTodosFailure = createAction<TodoErrorType, typeof GET_TODOS_FAILURE>(GET_TODOS_FAILURE);
 
-export const createTodo = createAction<{ text: string; createdAt: string; isCompleted: boolean }>(CREATE_TODO);
-export const createTodoSuccess = createAction<TodoCreateResponseType>(CREATE_TODO_SUCCESS);
-export const createTodoFailure = createAction<TodoErrorType>(CREATE_TODO_FAILURE);
+export const createTodo = createAction<{ text: string; createdAt: string; isCompleted: boolean }, typeof CREATE_TODO>(
+  CREATE_TODO
+);
+export const createTodoSuccess = createAction<TodoCreateResponseType, typeof CREATE_TODO_SUCCESS>(CREATE_TODO_SUCCESS);
+export const createTodoFailure = createAction<TodoErrorType, typeof CREATE_TODO_FAILURE>(CREATE_TODO_FAILURE);
 
-export const updateCheckTodo = createAction<{ _id: string; isCompleted: boolean }>(UPDATE_CHECK_TODO);
-export const updateTextTodo = createAction<{ _id: string; text: string }>(UPDATE_TEXT_TODO);
+export const updateCheckTodo = createAction<{ _id: string; isCompleted: boolean }, typeof UPDATE_CHECK_TODO>(
+  UPDATE_CHECK_TODO
+);
+export const updateTextTodo = createAction<{ _id: string; text: string }, typeof UPDATE_TEXT_TODO>(UPDATE_TEXT_TODO);
 export const updateTodoSuccess = createAction(UPDATE_TODO_SUCCESS);
-export const updateTodoFailure = createAction<TodoErrorType>(UPDATE_TODO_FAILURE);
+export const updateTodoFailure = createAction<TodoErrorType, typeof UPDATE_TODO_FAILURE>(UPDATE_TODO_FAILURE);
 
-export const deleteTodo = createAction<{ _id: string }>(DELETE_TODO);
+export const deleteTodo = createAction<{ _id: string }, typeof DELETE_TODO>(DELETE_TODO);
 export const deleteTodoSuccess = createAction(DELETE_TODO_SUCCESS);
-export const deleteTodoFailure = createAction<TodoErrorType>(DELETE_TODO_FAILURE);
+export const deleteTodoFailure = createAction<TodoErrorType, typeof DELETE_TODO_FAILURE>(DELETE_TODO_FAILURE);
 
 function* getTodosSaga(): Generator<CallEffect<AxiosResponse<TodoGetResponseType[]>>> | PutEffect {
   yield put(startLoading(GET_TODOS));
