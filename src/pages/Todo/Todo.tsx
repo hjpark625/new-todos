@@ -1,12 +1,12 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import TodoTemplate from '../../components/Todos/TodoTemplate';
-import TodoInsert from '../../components/Todos/TodoInsert';
-import TodoList from '../../components/Todos/TodoList';
-import { getTodos } from '../../modules/todos';
-import { useAppDispatch } from '../../modules';
-import type { RootState } from '../../modules';
+import TodoTemplate from '@/components/Todos/TodoTemplate';
+import TodoInsert from '@/components/Todos/TodoInsert';
+import TodoList from '@/components/Todos/TodoList';
+import { getTodos } from '@/modules/todos';
+import { useAppDispatch } from '@/modules';
+import type { RootState } from '@/modules';
 
 function Todo() {
   const dispatch = useAppDispatch();

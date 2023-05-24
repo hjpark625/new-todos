@@ -1,13 +1,14 @@
 import { createAction, createReducer } from '@reduxjs/toolkit';
-import { CallEffect, PutEffect, call, put, takeLatest } from 'redux-saga/effects';
+import { call, put, takeLatest } from 'redux-saga/effects';
 import { isAxiosError } from 'axios';
-import * as authAPI from '../api/auth';
-import { finishLoading, startLoading } from './loading';
+import * as authAPI from '@/api/auth';
+import { finishLoading, startLoading } from '@/modules/loading';
 import type { AxiosResponse } from 'axios';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import type { AuthType } from '../components/types/Auth.type';
-import type { AuthResponseType } from '../api/auth/authAPI.type';
-import type { AuthErrorType } from '../api/auth/authAPI.type';
+import type { CallEffect, PutEffect } from 'redux-saga/effects';
+import type { AuthType } from '@/components/types/Auth.type';
+import type { AuthResponseType } from '@/api/auth/authAPI.type';
+import type { AuthErrorType } from '@/api/auth/authAPI.type';
 
 const CHANGE_FIELD = 'auth/CHANGE_FIELD';
 const SET_AUTHTYPE = 'auth/SET_AUTHTYPE';

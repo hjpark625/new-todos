@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import palette from '../../../styles/palette';
+import palette from '@/styles/palette';
 
 export const TodoListWrapper = styled.div`
   min-height: 320px;

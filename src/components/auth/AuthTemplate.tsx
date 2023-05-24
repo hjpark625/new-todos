@@ -1,5 +1,5 @@
 import React from 'react';
-import * as S from './styles/AuthTemplate.styled';
+import * as S from '@/components/auth/styles/AuthTemplate.styled';
 
 function AuthTemplate({ children }: { children: React.ReactNode }) {
   return (

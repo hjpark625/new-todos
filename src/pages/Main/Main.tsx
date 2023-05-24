@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import Login from './Login';
-import Register from './Register';
-import type { RootState } from '../../modules/index';
+import Login from '@/pages/Main/Login';
+import Register from '@/pages/Main/Register';
+import type { RootState } from '@/modules';
 
 function Main() {
   const navigate = useNavigate();

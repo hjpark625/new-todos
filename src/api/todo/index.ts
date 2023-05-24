@@ -1,6 +1,6 @@
-import api from '..';
+import api from '@/api';
 import type { AxiosResponse } from 'axios';
-import type { TodoCreateResponseType, TodoGetResponseType } from './todoAPI.type';
+import type { TodoCreateResponseType, TodoGetResponseType } from '@/api/todo/todoAPI.type';
 
 export const createTodo = async ({
   text,

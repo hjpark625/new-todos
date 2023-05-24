@@ -1,11 +1,11 @@
 import { createAction, createReducer } from '@reduxjs/toolkit';
 import { call, put, takeLatest, takeEvery } from 'redux-saga/effects';
 import { isAxiosError } from 'axios';
-import { startLoading, finishLoading } from './loading';
-import * as todoAPI from '../api/todo';
+import { startLoading, finishLoading } from '@/modules/loading';
+import * as todoAPI from '@/api/todo';
 import type { PutEffect, CallEffect } from 'redux-saga/effects';
-import type { TodoCreateResponseType, TodoErrorType, TodoGetResponseType } from '../api/todo/todoAPI.type';
 import type { AxiosResponse } from 'axios';
+import type { TodoCreateResponseType, TodoErrorType, TodoGetResponseType } from '@/api/todo/todoAPI.type';
 
 const CHANGE_INPUT = 'todo/CHANGE_INPUT';
 const CHANGE_EDIT_INPUT = 'todo/CHANGE_EDIT_INPUT';

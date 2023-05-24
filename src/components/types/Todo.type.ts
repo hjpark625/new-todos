@@ -1,4 +1,4 @@
-import type { TodoGetResponseType } from '../../api/todo/todoAPI.type';
+import type { TodoGetResponseType } from '@/api/todo/todoAPI.type';
 
 export interface TodoListProps {
   todos: TodoGetResponseType[] | null;

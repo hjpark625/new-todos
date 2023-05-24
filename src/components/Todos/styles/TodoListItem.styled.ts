@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import palette from '../../../styles/palette';
-import { StyleProps } from '../../types/Todo.type';
+import palette from '@/styles/palette';
+import type { StyleProps } from '@/components/types/Todo.type';
 
 export const TodoListItemWrapper = styled.div`
   padding: 1rem;

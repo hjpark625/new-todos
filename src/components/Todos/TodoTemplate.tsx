@@ -1,8 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../../modules';
-import { logout } from '../../modules/auth';
-import * as S from './styles/TodoTemplate.styled';
+import { useAppDispatch } from '@/modules';
+import { logout } from '@/modules/auth';
+import * as S from '@/components/Todos/styles/TodoTemplate.styled';
 
 interface ChildrenProps {
   children: React.ReactNode;

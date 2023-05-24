@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
-import palette from '../../../styles/palette';
-import type { ButtonStyledProps } from '../../types/Auth.type';
+import palette from '@/styles/palette';
+import type { ButtonStyledProps } from '@/components/types/Auth.type';
 
 export const AuthFormWrapper = styled.div`
   h3 {

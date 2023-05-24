@@ -3,11 +3,11 @@ import { useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquare, faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { faPen, faSquareCheck } from '@fortawesome/free-solid-svg-icons';
-import * as S from './styles/TodoListItem.styled';
-import { useAppDispatch } from '../../modules';
-import { changeEditInput, updateCheckTodo, updateTextTodo, deleteTodo } from '../../modules/todos';
-import type { RootState } from '../../modules';
-import type { TodoListItemProps } from '../types/Todo.type';
+import * as S from '@/components/Todos/styles/TodoListItem.styled';
+import { useAppDispatch } from '@/modules';
+import { changeEditInput, updateCheckTodo, updateTextTodo, deleteTodo } from '@/modules/todos';
+import type { RootState } from '@/modules';
+import type { TodoListItemProps } from '@/components/types/Todo.type';
 
 function TodoListItem({ items }: TodoListItemProps) {
   const dispatch = useAppDispatch();

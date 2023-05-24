@@ -2,9 +2,9 @@ import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import createSagaMiddleware from 'redux-saga';
 import { all } from 'redux-saga/effects';
 import { useDispatch } from 'react-redux';
-import todos, { todoSaga } from './todos';
-import auth, { authSaga } from './auth';
-import loading from './loading';
+import todos, { todoSaga } from '@/modules/todos';
+import auth, { authSaga } from '@/modules/auth';
+import loading from '@/modules/loading';
 
 const sagaMiddleware = createSagaMiddleware();
 

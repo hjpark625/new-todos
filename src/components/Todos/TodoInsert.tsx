@@ -1,10 +1,10 @@
 import { useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { useAppDispatch } from '../../modules/index';
-import { changeInput, createTodo } from '../../modules/todos';
-import * as S from './styles/TodoInsert.styled';
-import type { RootState } from '../../modules/index';
+import { useAppDispatch } from '@/modules/index';
+import { changeInput, createTodo } from '@/modules/todos';
+import * as S from '@/components/Todos/styles/TodoInsert.styled';
+import type { RootState } from '@/modules/index';
 
 function TodoInsert() {
   const dispatch = useAppDispatch();

@@ -1,13 +1,11 @@
 import React, { useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { changeField, login, register } from '../../modules/auth';
-import { setAuthType } from '../../modules/auth';
-import { useAppDispatch } from '../../modules';
-import * as S from './styles/AuthForm.styled';
-import type { RootState } from '../../modules';
-import type { AuthType } from '../types/Auth.type';
-import type { AuthFormProps } from '../types/Auth.type';
+import { changeField, login, register, setAuthType } from '@/modules/auth';
+import { useAppDispatch } from '@/modules';
+import * as S from '@/components/auth/styles/AuthForm.styled';
+import type { RootState } from '@/modules';
+import type { AuthType, AuthFormProps } from '@/components/types/Auth.type';
 
 const textMap: AuthType = {
   login: '로그인',

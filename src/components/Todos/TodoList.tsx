@@ -1,6 +1,6 @@
-import TodoListItem from './TodoListItem';
-import * as S from './styles/TodoList.styled';
-import type { TodoListProps } from '../types/Todo.type';
+import TodoListItem from '@/components/Todos/TodoListItem';
+import * as S from '@/components/Todos/styles/TodoList.styled';
+import type { TodoListProps } from '@/components/types/Todo.type';
 
 function TodoList({ todos }: TodoListProps) {
   return (

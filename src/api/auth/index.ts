@@ -1,6 +1,6 @@
-import api from '..';
+import api from '@/api';
 import type { AxiosResponse } from 'axios';
-import type { AuthResponseType, CheckResponseType } from './authAPI.type';
+import type { AuthResponseType, CheckResponseType } from '@/api/auth/authAPI.type';
 
 export const login = async ({ email, password }: { email: string; password: string }) => {
   const { data } = await api.post<AxiosResponse<AuthResponseType>>('/auth/login', { email, password });
